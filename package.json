@@ -13,13 +13,24 @@
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'"
   },
   "dependencies": {
+    "@babel/runtime": "^7.12.0",
     "@hot-loader/react-dom": "^17.0.1",
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "@types/chrome": "0.0.126",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "firebase": "^8.2.4",
+    "framer-motion": "^3.2.1",
+    "moment": "^2.29.1",
+    "popmotion": "^9.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-hot-loader": "^4.13.0"
+    "react-hook-form": "^6.14.1",
+    "react-hot-loader": "^4.13.0",
+    "react-icons": "^4.1.0",
+    "react-moment": "^1.1.1",
+    "sass": "^1.32.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
