@@ -1,11 +1,11 @@
 {
-  "name": "chrome-extension-boilerplate-react",
+  "name": "rex-extension-extension-v3-boilerplate-react",
   "version": "3.2.1",
-  "description": "A chrome extension boilerplate built with React 17 and Webpack 5",
+  "description": "A rex extension boilerplate built with React 17 and Webpack 5",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lxieyang/chrome-extension-boilerplate-react.git"
+    "url": "https://github.com/IdleScV/chrome-extension-boilerplate-react.git"
   },
   "scripts": {
     "build": "node utils/build.js",
