@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
         )
         return
     }
-
+    // this fetch call may not be neccessary
     if(msg.action === "custom-signin"){
         let payload = {
             "uid": msg.uid,
