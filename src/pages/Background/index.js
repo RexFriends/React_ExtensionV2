@@ -35,12 +35,12 @@ chrome.runtime.onInstalled.addListener( response => {
 
 // This listens to state changes and can trigger functions here
 chrome.storage.onChanged.addListener( response => {
-    // console.log("storage has changed for: ", response)
+    
     if(response.uId){
         chrome.tabs.query({active: true, currentWindow: true}, function (arrayOfTabs) {
             chrome.tabs.reload(arrayOfTabs[0].id);});
+        // makes a fetch call to the for extension dashboard on login
         if(response.uId.oldValue === "empty"){
-            // Actual fetch
             fetch(URL + "/api/extension_dashboard?uid=" + response.uId.newValue )
                 .then(res => res.json())
                 .then(json => {console.log("extension_dashboard", json)
@@ -93,7 +93,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
 
         return
     }
-
+    // finished
     if(msg.action === "save-item"){
         chrome.tabs.captureVisibleTab(sender_info.tab.windowId, {}, function(image){
             chrome.storage.local.get(['uId'], function(result){
@@ -176,22 +176,22 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
         return
     }
 
-    
     if(msg.action === "add to-new-closet"){
         let payload = {
             "closet_name": msg.closet_name,
             "product_id": msg.item_id
         }
-        console.log("fetch request to add item to new closet", payload)
-        // fetch(URL + "/api/item_closet_change?uid=" + msg.uid,{
-        //     method: "POST",
-        //     headers:{   
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(payload),
+        console.log("add item to new closet", payload)
+        fetch(URL + "/api/new_closet_with_item?uid=" + msg.uid,{
+            method: "POST",
+            headers:{   
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
             
-        // }).then(response => response.json())
-        // .then(json => console.log("add item to new closet fetch result:", json))
+        })
+        .then(response => response.json())
+        .then(json => console.log("add item to new closet fetch result:", json))
     }
 });
 

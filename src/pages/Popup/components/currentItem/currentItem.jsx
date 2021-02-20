@@ -23,6 +23,14 @@ function CurrentItem ({uid, currentItem, closets, friends}){
     const [feedbackSuccess, feedbackSuccessSet] = useState(false)
     const [IMG, IMGSet] = useState(undefined)
 
+    if(currentItem === undefined){
+        return (
+            <div className="CurrentItem">
+                nothing here
+            </div>
+        )
+    }
+    
     // animation for page scroll
     const variants = {
         enter: (direction) => {
@@ -204,7 +212,7 @@ function CurrentItem ({uid, currentItem, closets, friends}){
                 .then(res => res.json())
                 .then(data => {console.log(data), IMGSet(data.uri)} )
         }
-       
+    
    
     return(
         <div  className="CurrentItem">

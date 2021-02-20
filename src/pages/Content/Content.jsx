@@ -120,12 +120,9 @@ const Content = () => {
             payload.action = "add closet-item"
             tempCurrent = [closet_id, ...tempCurrent]
         }
-
         chrome.runtime.sendMessage(payload, (reply) => {
             console.log(payload.action)
         })
-       
-
         currentItemClosetsSet(tempCurrent)
     }
 
@@ -137,9 +134,9 @@ const Content = () => {
         console.log(newClosetText)
         let payload = {
             action: "add to-new-closet",
-            closet_name: undefined, // closet id
-            item_id: undefined, // item id
-            uid, uid
+            closet_name: newClosetText, // closet id
+            item_id: currentItem.id, // item id
+            uid: uid
         }
         chrome.runtime.sendMessage(payload, (reply) => {
             console.log(payload.action, reply)
