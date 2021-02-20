@@ -14,7 +14,7 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-    "exclude_matches": ["https://accounts.google.com/*", "https://www.facebook.com/*", "https://*.firebaseapp.com/*", "https://*.google.com/*",  "https://*.rexfriends.medium.com/" ],
+    "exclude_matches": ["https://accounts.google.com/*", "https://www.facebook.com/*", "https://*.firebaseapp.com/*",   "https://*.rexfriends.medium.com/" ],
     "js": ["contentScript.bundle.js"],
     "css": ["content.styles.css"]
   }],

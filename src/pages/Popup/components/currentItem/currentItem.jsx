@@ -21,6 +21,7 @@ function CurrentItem ({uid, currentItem, closets, friends}){
     const [showWaiting, showWaitingSet] = useState(false)
     const [showRequestFeedback, showRequestFeedbackSet] = useState(false)
     const [feedbackSuccess, feedbackSuccessSet] = useState(false)
+    const [IMG, IMGSet] = useState(undefined)
 
     // animation for page scroll
     const variants = {
@@ -197,9 +198,17 @@ function CurrentItem ({uid, currentItem, closets, friends}){
         clearNewCloset()
     }
 
+    
+        if(currentItem.imgURL.split(".com")[0] === "https://product-images-rex.s3.amazonaws"){
+            fetch(currentItem.imgURL)
+                .then(res => res.json())
+                .then(data => {console.log(data), IMGSet(data.uri)} )
+        }
+       
+   
     return(
         <div  className="CurrentItem">
-                <img src={currentItem.imgUrl} alt={currentItem.itemName} id="image"/>
+                <img src={IMG} alt={currentItem.itemName} id="image"/>
                 <div id="options">
                     <div id="features">
                         <IconButton  onClick={()=>handlePage("closet")} className="icon">

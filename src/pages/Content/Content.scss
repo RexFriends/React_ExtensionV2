@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
 #rex-content-injection{
     z-index: 9999;
     position: fixed;
-    width: 140px;
-    height: 50px;
+    
+
     top: 100px;
     right: 0px;
 
@@ -10,35 +11,149 @@
     overflow-wrap: break-word;
     font-size: 16px;
     line-height: 1.5;
-    font-family: "16px";
-    // color: red;
+    font-family: "Baloo 2";
+    color: black;
+
+
     #request-signin{
-        height: 50px;
-        background-color: aliceblue;
+        height: 70px;
+        background-color: #24BDAF;
+        width: 120px;
+        font-size: 14px;
+        text-align: center;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        margin-left: auto;
+        font-weight: 600;
+        padding-top: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
+
     #landing-button{
-        // border: solid red 2px;
-        height: 50px;
+        height: 70px;
         display: flex;
         justify-content: flex-end;
-        // flex-direction: column;
-        #closet-button{
-            color: antiquewhite;
-            border: solid red 2px;
+        #saved-item-options{
+            display: flex;
+            flex-direction: column;
+            height: 70px;
+            width: 35px;
+            justify-content: space-between;
+            margin-top: 0px;
+            #closet-button{
+                color: rgb(0, 0, 0);
+                box-shadow: 0 0 5px  rgba(0,0,0,0.4);
+                background-color: rgb(236, 236, 236);
+                height: 28px;
+                width: 28px;
+                
+            }
         }
+        
         #save-button{
-            background-color: antiquewhite;
+            background-color: rgb(236, 236, 236);
             height: 30px;
+            font-size: 12px;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
-            margin-top: 10px;
+            margin-top: 20px;
+            font-family: "Baloo 2";
         }
+
+        #loading{
+   
+            margin-right: -26px;
+            margin-top: 25px;
+        }
+
         #cart-icon{
-            background-color: antiquewhite;
-            border-top-left-radius: 10px ;
-            border-bottom-left-radius: 10px;
-            width: 50px;
-            height: 50px;
+            margin-top: 15px;
+            background-color: rgb(236, 236, 236);
+            border-top-left-radius: 5px ;
+            border-bottom-left-radius: 5px;
+            width: 40px;
+            height: 40px;
+            box-shadow: 0 0 5px  rgba(0,0,0,0.4)
+        }
+        #itemcloset-list{
+            background-color: rgb(236, 236, 236);
+            box-shadow: 0 0 5px  rgba(0,0,0,0.4);
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            margin-right: 7px;
+            min-height: 120px;
+            max-height: 200px;
+            width: 190px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            #new-closet{
+                margin-top: 0px;
+                height: 24px;
+                background-color: #24BDAF;
+                width: 100%;
+                border-radius: 0px;
+                margin-bottom: 2px;
+            }
+            #new-closet-field{
+                margin-top: 0px;
+                height: 24px;
+                background-color: #24BDAF;
+                width: 176px;
+                display: flex;
+                margin-bottom: 2px;
+                #textfield{
+                    margin-top: 2px;
+                    background: transparent;
+                    border: none;
+                    height: 16px;
+                    width: 130px;
+                    padding-left: 10px;
+                }
+                #icon{
+                    margin-top: -6px;
+                    margin-right: 7px;
+                    margin-left: 3px;
+                    box-shadow: 0 2 5px  rgba(0,0,0,0.4);
+                    border-radius: 0;
+                }
+
+            }
+            #closet-item{
+                // border: solid red 2px;
+              
+                height: 20px;
+                display: flex;
+                #closet-name{
+                    // border: solid red 2px;
+                    font-size: 16px;
+                    margin-left: -5px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    height: 20px;
+                }
+                
+                
+            }
+
+            &::-webkit-scrollbar {
+                width: 14px;
+                height: 18px;
+              }
+                &::-webkit-scrollbar-thumb {
+                  height: 6px;
+                  border: 4px solid rgba(0, 0, 0, 0);
+                  background-clip: padding-box;
+                  background-color: rgba(0, 0, 0, 0.15);
+              }
+              &::-webkit-scrollbar-button {
+                  width: 0;
+                  height: 0;
+                  display: none;
+              }
+              &::-webkit-scrollbar-corner {
+                  background-color: transparent;
+              }
         }
     }
 }

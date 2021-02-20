@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener( response => {
     chrome.tabs.create(
         {
             active: true,
-            url: "https://rexfriends.com"
+            url: "https://google.com"
         }
     )
     // these clear all stoarge, not sure if neccessary for prod
@@ -40,264 +40,19 @@ chrome.storage.onChanged.addListener( response => {
         chrome.tabs.query({active: true, currentWindow: true}, function (arrayOfTabs) {
             chrome.tabs.reload(arrayOfTabs[0].id);});
         if(response.uId.oldValue === "empty"){
-        // setting up seed data
-            chrome.storage.local.set(
-                {
-                    currentItem: {
-                        imgUrl: "https://images-na.ssl-images-amazon.com/images/I/81KkSJ5eotL._AC_SL1500_.jpg",
-                        itemURL: "https://www.amazon.com/T-fal-Ultimate-Anodized-Nonstick-Dishwasher/dp/B004WULC3I?ref_=Oct_DLandingS_D_91f9fae8_60&smid=ATVPDKIKX0DER",
-                        itemName: "T-fal Nonstick Dishwasher Safe Cookware Lid Fry Pan, 10-Inch, Black",
-                        itemNotes: "Great for eggs",
-                        id: 32,
-                        closets:  [
-                            23, 24, 25, 28 // save for later 2021 2020 summer
-                        ],
-                        feedbacks: [
-                            {friend_id: 1, feedback: "I'm not really into it", review: "meh"},
-                            {friend_id: 2, feedback: "LOVE IT!", review: "good"},
-                            {friend_id: 5, feedback: "This looks disgusting... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi posuere, risus eget tincidunt luctus, nisi nisl tristique ex, ultrices laoreet nibh tortor nec est.", review: "bad"},
-                            {friend_id: 4, sent: "waiting", time_sent: "2021-02-05T19:50:29+00:00"}                        
-                        ]
-                    },
-                    friends: [
-                        {name: "John", img: "", id: 1},
-                        {name: "Dave", img: "", id: 2},
-                        {name: "Lisa", img: "", id: 3},
-                        {name: "Susan", img: "", id: 4},
-                        {name: "Lauren", img: "", id: 5},
-                        {name: "John2", img: "", id: 6},
-                        {name: "Dave2", img: "", id: 7},
-                        {name: "Lisa2", img: "", id: 8},
-                        {name: "Susan3", img: "", id: 9},
-                        {name: "Laure4", img: "", id: 10},
-                        {name: "John2", img: "", id: 11},
-                        {name: "Dave2213", img: "", id: 12},
-                        {name: "Lisa22", img: "", id: 13},
-                    ],
-                    closet:  [
-                        {name: "Save for later", count: 20, id: 23},
-                        {name: "2021", count: 3, id: 24},
-                        {name: "2020", count: 2,  id: 25},
-                        {name: "back to school", count: 4, id: 26},
-                        {name: "fieldtrip", count: 7, id: 27},
-                        {name: "summer", count: 8, id: 28},
-                        {name: "Item", count: 10, id: 29},
-                        {name: "winter collection",  count: 12, id: 30},
-                        {name: "Maybe when i drop some lbs", count: 2, id: 31},
-                        {name:"Spongebob fit", count: 5, id: 32}
-                    ],
-                    closetPreview: [
-                        {id: 23, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 24, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 25, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 26, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 27, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 28, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 29, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 30, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 31, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]},
-                        {id: 32, items: [
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8ea7b758/images/d_08/170154C_D_08X1.jpg?sw=406",
-                                id: 30
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7962a4e5/images/a_107/171247C_A_107X1.jpg?sw=964",
-                                id: 31
-                            },
-                            {
-                                img: "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4ab3cf5a/images/a_107/170585C_A_107X1.jpg?sw=2000",
-                                id: 32
-                            }
-                        ]}
-                    ],
-                    homepage: {
-                        title: "This is the homepage!",
-                        affiliateLinks: [
-                            {
-                                name: "Walmart",
-                                link: "https://www.walmart.com/",
-                                logo: "https://www.powellandmahoney.com/wp-content/uploads/2017/03/retailers-walmart-logo-1.png"
-                            },
-                            {
-                                name: "Urban Outfitters",
-                                link: "https://www.urbanoutfitters.com/",
-                                logo: "https://www.finelinetech.com/wp-content/uploads/URBAN-OUTFITTERS-logo-for-home-page.png"
-                            },
-                            {
-                                name: "Macy's",
-                                link: "https://www.macys.com/",
-                                logo: "https://cdn.mos.cms.futurecdn.net/kPTwCmCKYJUwGbDbRZr9MX.png"
-                            },
-                            {
-                                name: "Converse",
-                                link: "https://www.converse.com/",
-                                logo: "https://cdn.mos.cms.futurecdn.net/h28ZaxtM5kqAGb7587qns-320-80.jpg"
-                            },
-                            {
-                                name: "Amazon",
-                                link: "https://www.amazon.com/",
-                                logo: "http://media.corporate-ir.net/media_files/IROL/17/176060/Oct18/Amazon%20logo.PNG"
-                            },
-                            {
-                                name: "Macy's",
-                                link: "https://www.macys.com/",
-                                logo: "https://cdn.mos.cms.futurecdn.net/kPTwCmCKYJUwGbDbRZr9MX.png"
-                            },
-                            {
-                                name: "Converse",
-                                link: "https://www.converse.com/",
-                                logo: "https://cdn.mos.cms.futurecdn.net/h28ZaxtM5kqAGb7587qns-320-80.jpg"
-                            },
-                            {
-                                name: "Amazon",
-                                link: "https://www.amazon.com/",
-                                logo: "http://media.corporate-ir.net/media_files/IROL/17/176060/Oct18/Amazon%20logo.PNG"
-                            },
-                            {
-                                name: "Macy's",
-                                link: "https://www.macys.com/",
-                                logo: "https://cdn.mos.cms.futurecdn.net/kPTwCmCKYJUwGbDbRZr9MX.png"
-                            },
-                            {
-                                name: "Converse",
-                                link: "https://www.converse.com/",
-                                logo: "https://cdn.mos.cms.futurecdn.net/h28ZaxtM5kqAGb7587qns-320-80.jpg"
-                            }
-                        ]
-                    }
-                }
-            )
             // Actual fetch
-            // fetch(URL + "/api/save-rex?uid=" + response.uId)
+            fetch(URL + "/api/extension_dashboard?uid=" + response.uId.newValue )
+                .then(res => res.json())
+                .then(json => {console.log("extension_dashboard", json)
+                chrome.storage.local.set(json)
+            })
         }
     }
 })
 
 // Runs code from content.js that is async & may be affected by page change
 chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
-
-
-    // Signs user up/logs user in
     if(msg.action === "login-signup"){
-        console.log("login-signup in background:", msg, sender_info)
         let payload = {
             "firstname": msg.firstname,
             "lastname": msg.lastname,
@@ -305,40 +60,49 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
             "phone": msg.phone,
             "uid": msg.uid
         }
-        console.log("payload to api", payload)
-        // fetch(URL + "/api/signupweb",{
-        //     method: "POST",
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        // }).then(
-        //     res => res.json()
-        // ).then(
-        //     json => console.log(json)
-        // )
+        console.log("fetch request to login-signup", payload)
+        fetch(URL + "/api/signupweb",{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        }).then(
+            res => res.json()
+        ).then(
+            json => console.log("signupweb fetch result:", json)
+        )
+        return
     }
 
-    // custom signin
     if(msg.action === "custom-signin"){
-        console.log("custom sing-in in background:", msg, sender_info)
         let payload = {
             "uid": msg.uid,
             "email": msg.email
         }
-        console.log("pay load to api", payload)
+        console.log("fetch request to custom-signin", payload)
+        fetch(URL + "/api/webdashboard?uid=" + msg.uid,{
+            method: "POST",
+            headers:{   
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            
+        }).then(res => res.json())
+        .then(json => console.log("custom-signin fetch result:",json))
+
+        return
     }
-    // Saves item to db
+
     if(msg.action === "save-item"){
         chrome.tabs.captureVisibleTab(sender_info.tab.windowId, {}, function(image){
             chrome.storage.local.get(['uId'], function(result){
                 if(result.uId !== "empty"){
-                    console.log("sender info", sender_info)
                     let payload = {
                         "URL": sender_info.url,
                         "ImagePNG": image,
                     }   
-                    console.log("sending save item payload:", payload, result.uId)
+                    console.log("fetch request to /api/save-rex:", payload)
                     fetch(URL + "/api/save-rex?uid=" + result.uId,{
                         method: "POST",
                         headers:{   
@@ -346,23 +110,88 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
                         },
                         body: JSON.stringify(payload),
                         
-                    }).then(response => response.json())
-                    .then(json => console.log(json))
+                    })
+                    .then(response => response.json())
+                    .then(json => {
+                        if(json.currentItem){
+                            chrome.storage.local.set({currentItem: json.currentItem})
+                        }                
+                    })
                     
                 }
             })
         })
-       
+       return
+    }
+    // finished
+    if(msg.action === "add closet-item"){
+        let payload = {
+            "closet_id": msg.closet_id,
+            "product_id": msg.item_id,
+            "new_state": true
+        }
+        console.log("fetch request to add closet item:", msg)
+        fetch(URL + "/api/item_closet_change?uid=" + msg.uid,{
+            method: "POST",
+            headers:{   
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            
+        })
+        .then(response => response.json())
+        .then(json => console.log("add closet item fetch result:", json))
+
+        chrome.storage.local.get(["currentItem"], res =>{
+            let currentItem =  res.currentItem
+            currentItem.closets.push(msg.closet_id)
+            chrome.storage.local.set({currentItem})
+        })
+        return
+    }
+    // finished
+    if(msg.action === "remove closet-item"){
+        let payload = {
+            "closet_id": msg.closet_id,
+            "product_id": msg.item_id,
+            "new_state": false
+        }
+        console.log("fetch request to remove closet item:", msg)
+        fetch(URL + "/api/item_closet_change?uid=" + msg.uid,{
+            method: "POST",
+            headers:{   
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            
+        }).then(response => response.json())
+        .then(json => console.log("remove closet item fetch result:", json))
+
+        chrome.storage.local.get(["currentItem"], res =>{
+            let currentItem =  res.currentItem
+            let tempCloset =  currentItem.closets.filter( x => x !== msg.closet_id)
+            currentItem.closets = tempCloset
+            chrome.storage.local.set({currentItem})
+        })
+        return
     }
 
-    // Opens rexfriends dashboard on user open
-    if(msg === "options"){
-        chrome.tabs.create(
-            {
-                active: true,
-                url: "https://rexfriends.com"
-            }
-        )
+    
+    if(msg.action === "add to-new-closet"){
+        let payload = {
+            "closet_name": msg.closet_name,
+            "product_id": msg.item_id
+        }
+        console.log("fetch request to add item to new closet", payload)
+        // fetch(URL + "/api/item_closet_change?uid=" + msg.uid,{
+        //     method: "POST",
+        //     headers:{   
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(payload),
+            
+        // }).then(response => response.json())
+        // .then(json => console.log("add item to new closet fetch result:", json))
     }
 });
 

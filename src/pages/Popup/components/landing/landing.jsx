@@ -84,7 +84,7 @@ function Landing(){
         })
     }
 
-    function handleSuccessfulLogin(uid, firstname, lastname, email, phone = "null" ){
+    function handleSuccessfulLogin(uid, firstname, lastname, email, phone = null ){
         let payload = {
             action: "login-signup",
             uid: uid,
