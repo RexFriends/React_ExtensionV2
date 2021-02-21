@@ -191,7 +191,19 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
             
         })
         .then(response => response.json())
-        .then(json => console.log("add item to new closet fetch result:", json))
+        .then(json => {
+            let closet = msg.closets
+            closet.push(json.new_closet)
+            chrome.storage.local.set({closet})
+            
+            chrome.storage.local.get(["currentItem"], res =>{
+                let currentItem =  res.currentItem
+                currentItem.closets.push(json.new_closet.id)
+                chrome.storage.local.set({currentItem})
+            })
+            
+            }
+        )
     }
 });
 
