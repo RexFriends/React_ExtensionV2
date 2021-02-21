@@ -67,17 +67,26 @@ const Content = () => {
     const [showNewClosetField, showNewClosetFieldSet] = useState(false)
     const [newClosetText, newClosetTextSet] = useState("")
 
+    chrome.storage.onChanged.addListener( response => {
+        if (response.closet){
+            closetListSet(response.closet.newValue)
+            if(response.closet.newValue.length > response.closet.oldValue.length){
+                let newClosetId = response.closet.newValue[response.closet.newValue.length - 1].id
+                currentItemClosetsSet([...currentItemClosets,newClosetId])
+            }
+        }
+    })
+
     useEffect(() => {
         chrome.storage.local.get(["uId", "closet"], res => {
             uidSet(res.uId)
             closetListSet(res.closet)
-          
-            console.log("initial fetch", res)
         })
         return () => {
             
         }
     }, [])
+    
     const classes = useStyles();
     const handleSaveItem = () => {
         let payload = {
@@ -98,12 +107,8 @@ const Content = () => {
         chrome.storage.local.get(null, res => {
             currentItemSet(res.currentItem)
             currentItemClosetsSet(res.currentItem.closets)
-            console.log(res.currentItem)
-            console.log(closetList)
             showClosetSet(true)
         })
-        
-        
     }
 
     const handleCheck = (closet_id) => {
@@ -131,15 +136,15 @@ const Content = () => {
     }
 
     const handleNewCloset = () => {
-        console.log(newClosetText)
         let payload = {
             action: "add to-new-closet",
             closet_name: newClosetText, // closet id
             item_id: currentItem.id, // item id
-            uid: uid
+            uid: uid,
+            closets: closetList
         }
         chrome.runtime.sendMessage(payload, (reply) => {
-            console.log(payload.action, reply)
+            console.log(payload.action)
         }) 
         showNewClosetFieldSet(false)
     }
