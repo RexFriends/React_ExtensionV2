@@ -70,9 +70,11 @@ const Content = () => {
     chrome.storage.onChanged.addListener( response => {
         if (response.closet){
             closetListSet(response.closet.newValue)
-            if(response.closet.newValue.length > response.closet.oldValue.length){
-                let newClosetId = response.closet.newValue[response.closet.newValue.length - 1].id
-                currentItemClosetsSet([...currentItemClosets,newClosetId])
+            if(response.closet.newValue && response.closet.oldValue){
+                if(response.closet.newValue.length > response.closet.oldValue.length){
+                    let newClosetId = response.closet.newValue[response.closet.newValue.length - 1].id
+                    currentItemClosetsSet([...currentItemClosets,newClosetId])
+                }
             }
         }
     })
@@ -168,7 +170,7 @@ const Content = () => {
                                     {
                                         showNewClosetField ? 
                                         <div id="new-closet-field">
-                                            <input id="textfield" placeholder="Closet Name" autocomplete="off" maxlength="15" value={newClosetText} onChange={(e)=>newClosetTextSet(e.target.value)}/>
+                                            <input id="textfield" placeholder="Closet Name" autoComplete="off" maxLength="15" value={newClosetText} onChange={(e)=>newClosetTextSet(e.target.value)}/>
                                             <IconButton onClick={handleNewCloset} size="small" id="icon">
                                                 <IoMdAdd/>
                                             </IconButton>
@@ -179,8 +181,8 @@ const Content = () => {
                                  
                                     {
                                         closetList.map(
-                                            closet => 
-                                            <div id="closet-item">
+                                            (closet, i) => 
+                                            <div id="closet-item" key={i}>
                                                 <Checkbox 
                                                 className={classes.root}
                                                 color="default"
