@@ -20,5 +20,13 @@ content.id = 'rex-content-injection'
 shadownRoot.append(content)
 container.append(shadownRoot)
 
+chrome.storage.local.get(["showInjection"], res => {
+   if(res.showInjection === true){
+        render(<Content />, window.document.querySelector('#rex-content-injection'));
+   }
+})
 
-render(<Content />, window.document.querySelector('#rex-content-injection'));
+
+
+
+

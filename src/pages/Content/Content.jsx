@@ -66,6 +66,8 @@ const Content = () => {
     const [showShare, showShareSet] = useState(false)
     const [showNewClosetField, showNewClosetFieldSet] = useState(false)
     const [newClosetText, newClosetTextSet] = useState("")
+    const [closetSaveError, closetSaveErrorSet] = useState(undefined)
+    const classes = useStyles();
 
     chrome.storage.onChanged.addListener( response => {
         if (response.closet){
@@ -75,6 +77,14 @@ const Content = () => {
                     let newClosetId = response.closet.newValue[response.closet.newValue.length - 1].id
                     currentItemClosetsSet([...currentItemClosets,newClosetId])
                 }
+            }
+            
+        }
+        if(response.closet_save_error){
+            console.log("error closet", response.closet_save_error)
+            if(response.closet_save_error.newValue){
+                closetSaveErrorSet(response.closet_save_error.newValue)
+                chrome.storage.local.set({closet_save_error: undefined})
             }
         }
     })
@@ -88,8 +98,7 @@ const Content = () => {
             
         }
     }, [])
-    
-    const classes = useStyles();
+   
     const handleSaveItem = () => {
         let payload = {
             action: "save-item"
@@ -133,10 +142,6 @@ const Content = () => {
         currentItemClosetsSet(tempCurrent)
     }
 
-    const handleManageShare = () => {
-        showShareSet(!showShare)
-    }
-
     const handleNewCloset = () => {
         let payload = {
             action: "add to-new-closet",
@@ -151,6 +156,9 @@ const Content = () => {
         showNewClosetFieldSet(false)
     }
 
+    const handleManageShare = () => {
+        showShareSet(!showShare)
+    }
 
 
     if(uid === "empty" ){
@@ -238,6 +246,10 @@ const Content = () => {
                     </Button>
                         <img id="cart-icon" src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-cart-nocheck.png" alt="itemsavedicon"/>    
                     </>
+                }
+                {
+                    closetSaveError &&
+                    <div id="error" onClick={()=>{closetSaveErrorSet(false)}}> {closetSaveError} </div>
                 }
                 
             </div>

@@ -61,6 +61,20 @@
             font-family: "Baloo 2";
         }
 
+        #error{
+            border: solid red 2px;
+            position: fixed;
+            width: 55px;
+            height: 55px;
+            color: red;
+            font-weight: 700;
+            margin-top: 85px;
+            margin-right: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+
         #loading{
    
             margin-right: -26px;

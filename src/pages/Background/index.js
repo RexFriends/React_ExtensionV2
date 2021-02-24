@@ -28,7 +28,8 @@ chrome.runtime.onInstalled.addListener( response => {
             user: {
                 first_name: "Joe",
                 last_name: "Schmo" 
-            }
+            },
+            showInjection: true
         }
     )
 });
@@ -41,6 +42,7 @@ chrome.storage.onChanged.addListener( response => {
             chrome.tabs.reload(arrayOfTabs[0].id);});
         // makes a fetch call to the for extension dashboard on login
         if(response.uId.oldValue === "empty"){
+           
             fetch(URL + "/api/extension_dashboard?uid=" + response.uId.newValue )
                 .then(res => res.json())
                 .then(json => {console.log("extension_dashboard", json)
@@ -113,6 +115,10 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
                     })
                     .then(response => response.json())
                     .then(json => {
+                        console.log(json)
+                        if(json.success === false){
+                            chrome.storage.local.set({closet_save_error: json.reason})
+                        }
                         if(json.currentItem){
                             chrome.storage.local.set({currentItem: json.currentItem})
                         }                
@@ -175,7 +181,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
         })
         return
     }
-
+    // finished
     if(msg.action === "add to-new-closet"){
         let payload = {
             "closet_name": msg.closet_name,
