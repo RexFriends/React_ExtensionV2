@@ -241,9 +241,9 @@ const Content = () => {
                 {
                     itemSaved === false &&
                     <>
-                    <Button  id="save-button" onClick={handleSaveItem} > 
+                    <IconButton  id="save-button" onClick={handleSaveItem} > 
                         Save Item
-                    </Button>
+                    </IconButton>
                         <img id="cart-icon" src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-cart-nocheck.png" alt="itemsavedicon"/>    
                     </>
                 }

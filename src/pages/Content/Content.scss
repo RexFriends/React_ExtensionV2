@@ -54,11 +54,15 @@
         #save-button{
             background-color: rgb(236, 236, 236);
             height: 30px;
-            font-size: 12px;
+            font-size: 16px;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
             margin-top: 20px;
             font-family: "Baloo 2";
+            font-weight: 600;
+
         }
 
         #error{
