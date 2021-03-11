@@ -186,13 +186,40 @@ html{
   
   
   .Profile{
-    border: solid red 2px;
+    // border: solid red 2px;
     position: absolute;
     background-color: #F1F2F2;
     box-shadow: 0 0 10px 5px #a5a5a5;
     right: 0;
     height: 100%;
     z-index: 50;
+    &#profile{
+      display: flex;
+      flex-direction: column;
+      #top{
+       margin-top: 5px;
+       justify-content: space-between;
+       display: flex;
+       padding: 0px 5px;
+       font-size: 30px;
+      }
+      #content{
+           display: flex;
+           flex-direction: column;
+           flex-grow: 1;
+           justify-content: space-around;
+           #propic{
+               width: 150px;
+               height: 150px;
+               border-radius: 100px;
+               margin: 0px auto;
+           }
+           #signout{
+               width: 200px;
+               margin: 0px auto;
+           }
+      }
+   }
   }
   
   .Notification{
@@ -363,14 +390,42 @@ html{
       }
      }
     .CurrentItem{
+      &#empty{
+        font-size: 36px;
+        padding: 20px;
+        text-align: center;
+        #text{
+         background-color: #ECECEC;
+          border-radius: 10px;
+          font-weight: 500;
+          color: #6C6C6C;
+        }
+      }
+
       height: 100%;
-  
-      #image{
-        height: 300px;
+      
+      #header{
+        text-align: left;
+        padding-left: 30px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+
+      #carousel{
+        // border: solid red 2px;
+        height: 280px;
         margin: 0px auto  0px auto;
         object-fit: contain;
         max-width: 320px;
-     
+        overflow: hidden;
+
+        #img{
+          // border: solid red 2px;
+          width: 320px;
+          height: 260px;
+          object-fit: contain;
+        }
       }
   
       
@@ -380,6 +435,7 @@ html{
         #features{
           transform: scale(0.9);
           display: flex;
+          // border: solid red 2px;
           justify-content: space-between;
           .text{
             padding-top: 9px;

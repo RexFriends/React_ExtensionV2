@@ -1,16 +1,18 @@
 import React, {useState, useRef, useEffect} from 'react'
 import IconButton from '@material-ui/core/IconButton'
-import PersonIcon from '@material-ui/icons/Person'
 import Button from '@material-ui/core/Button'
 import Moment from 'react-moment'
-import {FaFacebookMessenger, FaCopy, FaWhatsapp} from 'react-icons/fa'
+import { FaCopy} from 'react-icons/fa'
 import {BiCloset, BiSad, BiHappyHeartEyes, BiMailSend, BiSend} from 'react-icons/bi'
-import {AiOutlineInfo, AiOutlineMeh} from 'react-icons/ai'
+import { AiOutlineMeh} from 'react-icons/ai'
 import {VscChromeClose} from 'react-icons/vsc'
 import {CgCloseR} from 'react-icons/cg'
 import {RiMailSendLine} from 'react-icons/ri'
-import {MdNavigateNext, MdNavigateBefore} from 'react-icons/md'
+import { MdNavigateBefore} from 'react-icons/md'
 import {motion, AnimatePresence} from 'framer-motion'
+import Carousel, { Dots }  from '@brainhubeu/react-carousel';
+import '@brainhubeu/react-carousel/lib/style.css';
+
 function CurrentItem ({uid, currentItem, closets, friends}){
     const [showPage, showPageSet] = useState("feedback")
     const [friendList, friendListSet] = useState(0)
@@ -21,12 +23,65 @@ function CurrentItem ({uid, currentItem, closets, friends}){
     const [showWaiting, showWaitingSet] = useState(false)
     const [showRequestFeedback, showRequestFeedbackSet] = useState(false)
     const [feedbackSuccess, feedbackSuccessSet] = useState(false)
-    const [IMG, IMGSet] = useState(undefined)
+    const [images, imagesSet] = useState([])
+    const [imageIndex, imageIndexSet] = useState(0)
 
+
+
+
+    const closetInput = useRef(null)
+    useEffect(() => {
+        console.log("Current Item", currentItem)
+        if(currentItem){
+            
+            chrome.storage.local.get(["uId"], res =>{
+                let payload = {
+                    action:"get_currentItem",
+                    uid: res.uId,
+                    currentItemId: currentItem.id
+                }
+
+                chrome.runtime.sendMessage(payload)
+
+            })
+        }
+        let images = []
+        if(currentItem.images !== null){
+            fetch(currentItem.images)
+            .then(res => res.json())
+            .then(json => {
+                console.log("this is the return", json)
+                for(const key in json){
+                    let base64 = json[key]
+                    if (base64.substring(0,2) === "b'" && base64[base64.length - 1]){
+                        base64 = base64.slice(2)
+                        base64 = base64.slice(0, -1)
+                    }
+                    images.push((<img src={"data:image/jpeg;base64,"+base64} id="img"/>))
+                }
+                
+                // console.log(images)
+                imagesSet(images)
+            })
+
+        }
+        return () => {
+        }
+    }, [])
+   // focuses on new textbox when rendered
+    useEffect(() => {
+        if(closetInput.current !== null){
+            closetInput.current.focus()
+        }
+        return () => {
+        }
+    }, [newCloset])
+
+    // if current item doesn't exist
     if(currentItem === undefined){
         return (
-            <div className="CurrentItem">
-                nothing here
+            <div className="CurrentItem" id="empty">
+                Click <div id="text"> Save Item </div> on a product page to see it here!
             </div>
         )
     }
@@ -123,16 +178,16 @@ function CurrentItem ({uid, currentItem, closets, friends}){
         newClosetSet(undefined)
     }
 
-    // focuses on new textbox when rendered
-    const closetInput = useRef(null)
-    useEffect(() => {
-         if(closetInput.current !== null){
-             closetInput.current.focus()
-         }
-         return () => {
-         }
-     }, [newCloset])
-      
+ 
+ 
+
+
+
+   
+
+
+
+
     const handleFocus = (event) => {
         event.target.setAttribute('autocomplete', 'off');
     }
@@ -170,9 +225,6 @@ function CurrentItem ({uid, currentItem, closets, friends}){
         //         console.log(data.friends[i])
         //     }
         // }
-
-
-
         // on error, do something, show user an error message, e.g. contact can't be reached, or contact has canceled rex requests.
     }
 
@@ -206,17 +258,20 @@ function CurrentItem ({uid, currentItem, closets, friends}){
         clearNewCloset()
     }
 
-    
-        if(currentItem.imgURL.split(".com")[0] === "https://product-images-rex.s3.amazonaws"){
-            fetch(currentItem.imgURL)
-                .then(res => res.json())
-                .then(data => {console.log(data), IMGSet(data.uri)} )
-        }
-    
-   
+
+    const handleCarousel = (e) => {
+        console.log()
+        imageIndexSet(e)
+    }
+
     return(
         <div  className="CurrentItem">
-                <img src={IMG} alt={currentItem.itemName} id="image"/>
+                <div id="header">Your Last Saved Item . . .</div>
+               
+                <div id="carousel">
+                    <Carousel value={imageIndex} slides={images} onChange={handleCarousel}   plugins={['centered']}/>
+                    <Dots value={imageIndex} onChange={handleCarousel} number={images.length}/>
+                </div>
                 <div id="options">
                     <div id="features">
                         <IconButton  onClick={()=>handlePage("closet")} className="icon">
@@ -235,24 +290,18 @@ function CurrentItem ({uid, currentItem, closets, friends}){
                                     "Closets"
                                 }                         
                             </div>
-                        <IconButton onClick={()=>handlePage("info")} className="icon" >
-                            {showPage === "info" ?
-                                <VscChromeClose/> :
-                                <AiOutlineInfo/>
-                            }
-                        </IconButton>
+                            <IconButton onClick={()=>{handleRequestApp("copylink")}} className="icon" ><FaCopy/></IconButton>
                     </div>
-                        <div id="friends">  
-                            <div className="friends-nav">
+                    <div id="friends">  
+                        <div className="friends-nav">
                                 {friendList > 0 && 
                                     <IconButton onClick={handlePrevFriendsRow} id="prev" size="small"  ><MdNavigateBefore/></IconButton>
                                 }
-                                {(friendList + 1 ) * 5 < handleFriendObject(currentItem.feedbacks, friends).length &&
+                                {/* {(friendList + 1 ) * 5 < handleFriendObject(currentItem.feedbacks, friends).length &&
                                     <IconButton onClick={handleNextFriendsRow} id="next" size="small" ><MdNavigateNext/></IconButton>
-                                }
-                            </div>
-                            {/* !! Animate this */}
-           
+                                } */}
+                        </div>
+
                             <AnimatePresence custom={direction} initial={false}>
                                 <motion.div key={friendList}
                                         custom={direction}
@@ -261,8 +310,8 @@ function CurrentItem ({uid, currentItem, closets, friends}){
                                         animate="center"
                                         exit="exit"
                                         className="friends">
-                                {handleFriendObject(currentItem.feedbacks, friends).slice((friendList * 5), (friendList * 5) + 5).map((friend, i) =>
-                                    <div 
+                                {/* {handleFriendObject(currentItem.feedbacks, friends).slice((friendList * 5), (friendList * 5) + 5).map((friend, i) =>
+                                <div 
                                         className="friend" 
                                         
                                     >
@@ -295,17 +344,17 @@ function CurrentItem ({uid, currentItem, closets, friends}){
                                         
                                         <div className="name">{friend.name}</div>
                                     </div>
-                                )}
+                                )} */}
                                 </motion.div>
                             </AnimatePresence>
                     
                           
 
-                            <div className="app-button">
+                            {/* <div className="app-button">
                             <IconButton onClick={()=>{handleRequestApp("whatsapp")}}><FaWhatsapp/></IconButton>
-                            <IconButton onClick={()=>{handleRequestApp("facebook")}}><FaFacebookMessenger/></IconButton>
-                            <IconButton onClick={()=>{handleRequestApp("copylink")}}><FaCopy/></IconButton>
-                            </div>
+                            <IconButton onClick={()=>{handleRequestApp("facebook")}}><FaFacebookMessenger/></IconButton> */}
+                            {/* <IconButton onClick={()=>{handleRequestApp("copylink")}}><FaCopy/></IconButton> */}
+                            {/* </div> */}
                         </div>
                     {/* Item Info */}
                     <AnimatePresence >
@@ -316,10 +365,10 @@ function CurrentItem ({uid, currentItem, closets, friends}){
                             animate={{x:0}}
                             exit={{  x: 350 }}
                         >
-                            <a href={currentItem.itemURL}>Link</a>
+                            {/* <a href={currentItem.itemURL}>Link</a>
                             <div>
                                 {currentItem.itemNotes}
-                            </div>
+                            </div> */}
                         </motion.div>
                     }
                     </AnimatePresence>
@@ -355,14 +404,14 @@ function CurrentItem ({uid, currentItem, closets, friends}){
                             {newCloset !== undefined &&
                                 <div className="closet submit" onClick={handleNewCloset}>Add</div>
                             }
-                            {
+                            {/* {
                                closetObjectOrder(currentItem, closets).map(
                                     (closet, i) => 
                                     <div key={i} className={`closet ${closet.state === true ? "highlight" : "nohighlight"}`} onClick={()=>handleClosetChange(closet)}>
                                         <div className="name">{closet.name}</div>
                                     </div>
                                 )
-                            }
+                            } */}
                         </motion.div>
                     }
                     </AnimatePresence>

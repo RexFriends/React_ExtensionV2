@@ -55,9 +55,10 @@ const Popup = () => {
 
   useEffect(() => {
     fetchUserInfo();
-    chrome.storage.local.get(["currentItem", "friends", "closet", "closetPreview", "homepage", "page", "uId"], res =>
+    chrome.storage.local.get(["current_item", "friends", "closet", "closetPreview", "homepage", "page", "uId"], res =>
       {
-        currentItemDataSet(res.currentItem)
+        console.log("fetching all data here", res)
+        currentItemDataSet(res.current_item)
         friendsDataSet(res.friends)
         closetDataSet(res.closet)
         homePageDataSet(res.homepage)
@@ -71,28 +72,28 @@ const Popup = () => {
   }, [])
   
   chrome.storage.onChanged.addListener( response => {
-    if (response.closet){
-      closetDataSet(response.closet.newValue)
-      console.log("closet values have changed", response)
+      if (response.closet){
+        closetDataSet(response.closet.newValue)
+        console.log("closet values have changed", response)
+      }
+      if (response.friends){
+        friendsDataSet(response.friends.newValue)
+        console.log("friends values have changed", response)
+      }
+      if (response.current_item){
+        currentItemDataSet(response.current_item.newValue)
+        console.log("currentItem values have changed", response)
+      }
+      if (response.homepage){
+        homePageDataSet(response.homepage.newValue)
+        console.log("homepage values have changed", response)
+      }
+      if (response.closetPreview){
+        closetPreviewDataSet(response.closetPreview.newValue)
+        console.log("closetPreview values have changed", response)
+      }
     }
-    if (response.friends){
-      friendsDataSet(response.friends.newValue)
-      console.log("friends values have changed", response)
-    }
-    if (response.currentItem){
-      currentItemDataSet(response.currentItem.newValue)
-      console.log("friends values have changed", response)
-    }
-    if (response.homepage){
-      homePageDataSet(response.homepage.newValue)
-      console.log("homepage values have changed", response)
-    }
-    if (response.closetPreview){
-      closetPreviewDataSet(response.closetPreview.newValue)
-      console.log("closetPreview values have changed", response)
-    }
-  }
-)
+  )
 
   // Handle Sliders
   const showMainScreen = () => {

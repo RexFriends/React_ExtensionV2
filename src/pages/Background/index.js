@@ -1,12 +1,12 @@
 import '../../assets/img/icon-34.png';
 import '../../assets/img/icon-128.png';
 import '../../assets/img/128.png';
-
+import URL from '../../assets/url'
 console.log('This is the background page.');
 console.log('Put the background scripts here.');
 
 // const Prod_URL = "http://rexfriendsserver-env.eba-xpijkhn3.us-east-1.elasticbeanstalk.com";
-const URL = "http://127.0.0.1:5000";
+// const URL = "http://127.0.0.1:5000";
 
 chrome.runtime.onInstalled.addListener( response => {
     console.log("runtime install: ", response)
@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener( response => {
     chrome.storage.local.set(
         {
             uId: "empty", 
-            page: 1,
+            page: 0,
             user: {
                 first_name: "Joe",
                 last_name: "Schmo" 
@@ -115,13 +115,15 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
                     })
                     .then(response => response.json())
                     .then(json => {
-                        console.log(json)
+                        console.log("this is the currentItem First fetch", json)
                         if(json.success === false){
                             chrome.storage.local.set({closet_save_error: json.reason})
                         }
+                        // make a second fetch after 3 seconds for web scraper data
                         if(json.currentItem){
-                            chrome.storage.local.set({currentItem: json.currentItem})
-                        }                
+                            let current_item = json.currentItem
+                            chrome.storage.local.set({current_item})
+                        }      
                     })
                     
                 }
@@ -173,11 +175,11 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
         }).then(response => response.json())
         .then(json => console.log("remove closet item fetch result:", json))
 
-        chrome.storage.local.get(["currentItem"], res =>{
-            let currentItem =  res.currentItem
-            let tempCloset =  currentItem.closets.filter( x => x !== msg.closet_id)
-            currentItem.closets = tempCloset
-            chrome.storage.local.set({currentItem})
+        chrome.storage.local.get(["current_item"], res =>{
+            let current_item =  res.current_item
+            let tempCloset =  current_item.closets.filter( x => x !== msg.closet_id)
+            current_item.closets = tempCloset
+            chrome.storage.local.set({current_item})
         })
         return
     }
@@ -202,14 +204,25 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply)=> {
             closet.push(json.new_closet)
             chrome.storage.local.set({closet})
             
-            chrome.storage.local.get(["currentItem"], res =>{
-                let currentItem =  res.currentItem
-                currentItem.closets.push(json.new_closet.id)
-                chrome.storage.local.set({currentItem})
+            chrome.storage.local.get(["current_item"], res =>{
+                let current_item =  res.current_item
+                current_item.closets.push(json.new_closet.id)
+                chrome.storage.local.set({current_item})
             })
             
             }
         )
+    }
+    // 
+    if(msg.action === "get_currentItem"){
+        console.log('update current item', msg)
+        fetch(URL + `/api/get_item/${msg.currentItemId}?uid=` + msg.uid)
+        .then(res => res.json())
+        .then(json => {
+            let current_item = json.current_item
+            chrome.storage.local.set({current_item})
+        })
+        .catch(err => console.log("this is an error", err))
     }
 });
 

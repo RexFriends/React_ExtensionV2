@@ -12,7 +12,7 @@
 
   export const updateState = (name, value) => {
     chrome.storage.local.set({[name]: value})
-    console.log({[name]: value})
+    // console.log({[name]: value})
   }
 
 

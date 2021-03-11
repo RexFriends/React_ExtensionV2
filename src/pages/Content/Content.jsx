@@ -136,9 +136,7 @@ const Content = () => {
             payload.action = "add closet-item"
             tempCurrent = [closet_id, ...tempCurrent]
         }
-        chrome.runtime.sendMessage(payload, (reply) => {
-            console.log(payload.action)
-        })
+        chrome.runtime.sendMessage(payload)
         currentItemClosetsSet(tempCurrent)
     }
 
@@ -150,9 +148,7 @@ const Content = () => {
             uid: uid,
             closets: closetList
         }
-        chrome.runtime.sendMessage(payload, (reply) => {
-            console.log(payload.action)
-        }) 
+        chrome.runtime.sendMessage(payload) 
         showNewClosetFieldSet(false)
     }
 
