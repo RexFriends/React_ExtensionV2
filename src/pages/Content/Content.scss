@@ -1,178 +1,300 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
-#rex-content-injection{
-    z-index: 9999;
-    position: fixed;
-    
+#rex-content-injection {
+  z-index: 99999;
+  position: fixed;
 
-    top: 100px;
-    right: 0px;
+  top: 100px;
+  right: 0px;
 
-    user-select: none;
-    overflow-wrap: break-word;
-    font-size: 16px;
-    line-height: 1.5;
-    font-family: "Baloo 2";
-    color: black;
+  user-select: none;
+  overflow-wrap: break-word;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: 'Baloo 2';
+  color: black;
 
+  #request-signin {
+    height: 70px;
+    background-color: #24bdaf;
+    width: 120px;
+    font-size: 14px;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin-left: auto;
+    font-weight: 600;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 
-    #request-signin{
-        height: 70px;
-        background-color: #24BDAF;
-        width: 120px;
-        font-size: 14px;
-        text-align: center;
+  #landing-button {
+    height: 70px;
+    display: flex;
+    justify-content: flex-end;
+
+    #item-not-saved {
+      display: flex;
+      justify-content: flex-end;
+      #save-button {
+        background-color: rgb(236, 236, 236);
+        height: 30px;
+        font-size: 16px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
-        margin-left: auto;
+        margin-top: 20px;
+        font-family: 'Baloo 2';
         font-weight: 600;
-        padding-top: 5px;
-        padding-left: 5px;
-        padding-right: 5px;
+      }
+      #cart-icon {
+        margin-top: 15px;
+        background-color: rgb(236, 236, 236);
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        width: 40px;
+        height: 40px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+      }
     }
 
-    #landing-button{
-        height: 70px;
+    #loading {
+      margin-right: -26px;
+      margin-top: 25px;
+    }
+
+    #item-saved {
+      display: flex;
+      justify-content: flex-end;
+      #saved-item-options {
         display: flex;
-        justify-content: flex-end;
-        #saved-item-options{
-            display: flex;
-            flex-direction: column;
-            height: 70px;
-            width: 35px;
-            justify-content: space-between;
-            margin-top: 0px;
-            #closet-button{
-                color: rgb(0, 0, 0);
-                box-shadow: 0 0 5px  rgba(0,0,0,0.4);
-                background-color: rgb(236, 236, 236);
-                height: 28px;
-                width: 28px;
-                
-            }
+        flex-direction: column;
+        height: 70px;
+        width: 35px;
+        justify-content: space-between;
+        margin-top: 0px;
+        #closet-button {
+          color: rgb(0, 0, 0);
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+          background-color: rgb(236, 236, 236);
+          height: 28px;
+          width: 28px;
         }
-        
-        #save-button{
-            background-color: rgb(236, 236, 236);
-            height: 30px;
-            font-size: 16px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
-            margin-top: 20px;
-            font-family: "Baloo 2";
-            font-weight: 600;
+      }
 
+      #cart-icon {
+        margin-top: 15px;
+        background-color: rgb(236, 236, 236);
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        width: 40px;
+        height: 40px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+      }
+      #itemcloset-list {
+        background-color: rgb(236, 236, 236);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        margin-right: 7px;
+        // min-height: 120px;
+        max-height: 200px;
+        width: 190px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        #new-closet {
+          margin-top: 0px;
+          height: 24px;
+          background-color: #24bdaf;
+          width: 100%;
+          border-radius: 0px;
+          margin-bottom: 2px;
         }
-
-        #error{
-            border: solid red 2px;
-            position: fixed;
-            width: 55px;
-            height: 55px;
-            color: red;
-            font-weight: 700;
-            margin-top: 85px;
-            margin-right: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 12px;
-        }
-
-        #loading{
-   
-            margin-right: -26px;
-            margin-top: 25px;
-        }
-
-        #cart-icon{
-            margin-top: 15px;
-            background-color: rgb(236, 236, 236);
-            border-top-left-radius: 5px ;
-            border-bottom-left-radius: 5px;
-            width: 40px;
-            height: 40px;
-            box-shadow: 0 0 5px  rgba(0,0,0,0.4)
-        }
-        #itemcloset-list{
-            background-color: rgb(236, 236, 236);
-            box-shadow: 0 0 5px  rgba(0,0,0,0.4);
-            border-bottom-right-radius: 5px;
-            border-bottom-left-radius: 5px;
+        #new-closet-field {
+          margin-top: 0px;
+          height: 24px;
+          background-color: #24bdaf;
+          width: 176px;
+          display: flex;
+          margin-bottom: 2px;
+          #textfield {
+            margin-top: 2px;
+            background: transparent;
+            border: none;
+            height: 16px;
+            width: 130px;
+            padding-left: 10px;
+          }
+          #icon {
+            margin-top: -6px;
             margin-right: 7px;
-            min-height: 120px;
-            max-height: 200px;
-            width: 190px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            #new-closet{
-                margin-top: 0px;
-                height: 24px;
-                background-color: #24BDAF;
-                width: 100%;
-                border-radius: 0px;
-                margin-bottom: 2px;
-            }
-            #new-closet-field{
-                margin-top: 0px;
-                height: 24px;
-                background-color: #24BDAF;
-                width: 176px;
-                display: flex;
-                margin-bottom: 2px;
-                #textfield{
-                    margin-top: 2px;
-                    background: transparent;
-                    border: none;
-                    height: 16px;
-                    width: 130px;
-                    padding-left: 10px;
-                }
-                #icon{
-                    margin-top: -6px;
-                    margin-right: 7px;
-                    margin-left: 3px;
-                    box-shadow: 0 2 5px  rgba(0,0,0,0.4);
-                    border-radius: 0;
-                }
-
-            }
-            #closet-item{
-                // border: solid red 2px;
-              
-                height: 20px;
-                display: flex;
-                #closet-name{
-                    // border: solid red 2px;
-                    font-size: 16px;
-                    margin-left: -5px;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    height: 20px;
-                }
-                
-                
-            }
-
-            &::-webkit-scrollbar {
-                width: 14px;
-                height: 18px;
-              }
-                &::-webkit-scrollbar-thumb {
-                  height: 6px;
-                  border: 4px solid rgba(0, 0, 0, 0);
-                  background-clip: padding-box;
-                  background-color: rgba(0, 0, 0, 0.15);
-              }
-              &::-webkit-scrollbar-button {
-                  width: 0;
-                  height: 0;
-                  display: none;
-              }
-              &::-webkit-scrollbar-corner {
-                  background-color: transparent;
-              }
+            margin-left: 3px;
+            box-shadow: 0 2 5px rgba(0, 0, 0, 0.4);
+            border-radius: 0;
+          }
         }
+        #closet-item {
+          // border: solid red 2px;
+
+          height: 20px;
+          display: flex;
+          #closet-name {
+            // border: solid red 2px;
+            font-size: 16px;
+            margin-left: -5px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            height: 20px;
+          }
+        }
+
+        &::-webkit-scrollbar {
+          width: 14px;
+          height: 18px;
+        }
+        &::-webkit-scrollbar-thumb {
+          height: 6px;
+          border: 4px solid rgba(0, 0, 0, 0);
+          background-clip: padding-box;
+          background-color: rgba(0, 0, 0, 0.15);
+        }
+        &::-webkit-scrollbar-button {
+          width: 0;
+          height: 0;
+          display: none;
+        }
+        &::-webkit-scrollbar-corner {
+          background-color: transparent;
+        }
+      }
+      #sharebox {
+        background-color: rgb(236, 236, 236);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        margin-right: 7px;
+        max-height: 300px;
+        width: 190px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        #rex-top {
+          display: flex;
+          justify-content: space-between;
+          margin: 5px 2px;
+          padding: 5px 10px;
+          border-bottom: 2px solid rgba(43, 42, 42, 0.521);
+          #title {
+            font-weight: 600;
+            padding-right: 10px;
+            font-size: 16px;
+          }
+          #share-button {
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+            margin-top: -5px;
+            #svg {
+              font-size: 16px;
+            }
+          }
+          #popup {
+            position: absolute;
+            margin-top: -45px;
+            font-size: 12px;
+            border-radius: 13px;
+            padding: 3px 5px;
+            background-color: #f8f8f8;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+            // border: solid red 2px;
+          }
+        }
+        #rex-content {
+          display: flex;
+          flex-direction: column;
+          #addfriend {
+            display: flex;
+            justify-content: space-around;
+            margin: 0px 5px;
+            height: 35px;
+            #svg {
+              font-size: 16px;
+            }
+          }
+          #searchbar {
+            display: flex;
+            flex-direction: row;
+
+            height: 35px;
+
+            #input {
+              border-radius: 3px;
+              margin: 0px 5px;
+              width: 140px;
+            }
+            #searchbutton {
+              width: 30px;
+              height: 30px;
+              margin-left: -2px;
+              #svg {
+                font-size: 16px;
+              }
+            }
+          }
+
+          #friendList {
+            height: 210px;
+            border: solid red 2px;
+            margin: 2px 4px 0px 4px;
+          }
+        }
+      }
     }
+
+    #error {
+      border: solid red 2px;
+      position: fixed;
+      width: 55px;
+      height: 55px;
+      color: red;
+      font-weight: 700;
+      margin-top: 85px;
+      margin-right: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+  #hide1 {
+    background-color: rgba(255, 255, 255, 0.493);
+    right: 10px;
+    top: -12px;
+    position: absolute;
+  }
+  #hide2 {
+    background-color: rgba(255, 255, 255, 0.493);
+    right: 12px;
+    top: -10px;
+    position: absolute;
+  }
 }
 
+#rex-screenshot-animation {
+  background-color: rgba(218, 218, 218, 0.377);
+  z-index: 99999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: calc(100vw);
+  height: calc(100vh);
+  animation: flash 1s;
+  animation-iteration-count: 1;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
