@@ -41,6 +41,7 @@ const Content = () => {
       if (response.closet_save_error.newValue) {
         closetSaveErrorSet(response.closet_save_error.newValue);
         chrome.storage.local.set({ closet_save_error: undefined });
+        setTimeout(() => closetSaveErrorSet(undefined), 2000);
       }
     }
     if (response.uri) {

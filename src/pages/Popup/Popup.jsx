@@ -31,8 +31,9 @@ const Popup = () => {
   const [homePageData, homePageDataSet] = useState(undefined);
   const [friendsData, friendsDataSet] = useState(undefined);
   const [currentItemData, currentItemDataSet] = useState(undefined);
-  const [closetData, closetDataSet] = useState(undefined);
-  const [closetPreviewData, closetPreviewDataSet] = useState(undefined);
+  const [closetData, closetDataSet] = useState([]);
+  const [closetPreviewData, closetPreviewDataSet] = useState([]);
+  const [user, userSet] = useState(undefined);
 
   const [[page, direction], setPage] = useState([undefined, 0]);
   const [currentUid, currentUidSet] = useState('');
@@ -61,9 +62,10 @@ const Popup = () => {
         'homepage',
         'page',
         'uId',
+        'user',
       ],
       (res) => {
-        console.log('fetching all data here', res);
+        console.log(res.user);
         currentItemDataSet(res.current_item);
         friendsDataSet(res.friends);
         closetDataSet(res.closet);
@@ -71,6 +73,7 @@ const Popup = () => {
         closetPreviewDataSet(res.closet_preview);
         setPage([res.page, 0]);
         currentUidSet(res.uId);
+        userSet(res.user);
       }
     );
     return () => {};
@@ -97,6 +100,12 @@ const Popup = () => {
       closetPreviewDataSet(response.closet_preview.newValue);
       // console.log('closetPreview values have changed', response);
     }
+    if (response.user) {
+      userSet(response.user.newValue);
+    }
+    if (response.uId.oldValue === 'empty') {
+      window.close();
+    }
   });
 
   // Handle Sliders
@@ -107,12 +116,12 @@ const Popup = () => {
 
   // All current pages
   let pages = [
-    <CurrentItem
-      uid={currentUid}
-      currentItem={currentItemData}
-      closets={closetData}
-      friends={friendsData}
-    />,
+    // <CurrentItem
+    //   uid={currentUid}
+    //   currentItem={currentItemData}
+    //   closets={closetData}
+    //   friends={friendsData}
+    // />,
     // <Home uid={currentUid} homepageData={homePageData}/>,
     <Closets
       uid={currentUid}
@@ -171,6 +180,7 @@ const Popup = () => {
       <Header
         showProfileSet={showProfileSet}
         showNotificationSet={showNotificationSet}
+        user={user}
       />
       {page !== undefined && (
         <div className="Content-Box" onClick={showMainScreen}>

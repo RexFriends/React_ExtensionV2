@@ -64,14 +64,17 @@ function ClosetInjection({
   const [showNewClosetField, showNewClosetFieldSet] = useState(false);
   const [newClosetText, newClosetTextSet] = useState('');
   const handleNewCloset = () => {
-    let payload = {
-      action: 'add to-new-closet',
-      closet_name: newClosetText, // closet id
-      item_id: currentItem.id, // item id
-      uid: uid,
-      closets: closetList,
-    };
-    chrome.runtime.sendMessage(payload);
+    if (newClosetText !== '') {
+      let payload = {
+        action: 'add to-new-closet',
+        closet_name: newClosetText, // closet id
+        item_id: currentItem.id, // item id
+        uid: uid,
+        closets: closetList,
+      };
+      chrome.runtime.sendMessage(payload);
+    }
+    newClosetTextSet('');
     showNewClosetFieldSet(false);
   };
   const handleCheck = (closet_id) => {
@@ -104,7 +107,7 @@ function ClosetInjection({
             id="textfield"
             placeholder="Closet Name"
             autoComplete="off"
-            maxLength="15"
+            maxLength="12"
             value={newClosetText}
             onChange={(e) => newClosetTextSet(e.target.value)}
           />
@@ -113,29 +116,34 @@ function ClosetInjection({
           </IconButton>
         </div>
       ) : (
-        <Button id="new-closet" onClick={() => showNewClosetFieldSet(true)}>
+        <Button
+          id="new-closet"
+          onClick={() => showNewClosetFieldSet(true)}
+          id="new-closet-button"
+        >
           New Closet
         </Button>
       )}
 
-      {closetList.map((closet, i) => (
-        <div id="closet-item" key={i}>
-          <Checkbox
-            className={classes.root}
-            color="default"
-            checked={currentItemClosets.includes(closet.id)}
-            checkedIcon={
-              <span className={clsx(classes.icon, classes.checkedIcon)} />
-            }
-            icon={<span className={classes.icon} />}
-            inputProps={{
-              'aria-label': 'decorative checkbox',
-            }}
-            onClick={() => handleCheck(closet.id)}
-          />
-          <div id="closet-name">{closet.name}</div>
-        </div>
-      ))}
+      {closetList &&
+        closetList.map((closet, i) => (
+          <div id="closet-item" key={i}>
+            <Checkbox
+              className={classes.root}
+              color="default"
+              checked={currentItemClosets.includes(closet.id)}
+              checkedIcon={
+                <span className={clsx(classes.icon, classes.checkedIcon)} />
+              }
+              icon={<span className={classes.icon} />}
+              inputProps={{
+                'aria-label': 'decorative checkbox',
+              }}
+              onClick={() => handleCheck(closet.id)}
+            />
+            <div id="closet-name">{closet.name}</div>
+          </div>
+        ))}
     </motion.div>
   );
 }

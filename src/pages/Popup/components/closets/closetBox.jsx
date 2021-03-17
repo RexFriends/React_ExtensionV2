@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@material-ui/core/Button';
 
 function ClosetBox({ closetData, closetPreview }) {
   let [image, imageSet] = useState([]);

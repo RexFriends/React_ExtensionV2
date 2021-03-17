@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoMail } from 'react-icons/io5';
 
-function Header({ showProfileSet, showNotificationSet }) {
+function Header({ showProfileSet, showNotificationSet, user }) {
   const data = {
     notifications: 100,
     firstname: 'Firstname Lastname',
@@ -12,14 +12,14 @@ function Header({ showProfileSet, showNotificationSet }) {
 
   return (
     <div className="Header">
-      <IoMail
+      {/* <IoMail
         className="notif"
         onClick={() => {
           showProfileSet(false);
           showNotificationSet(true);
         }}
-      />
-      <div className="badge">
+      /> */}
+      {/* <div className="badge">
         {data.notifications > 99 ? (
           <>
             <div className="count">99</div>
@@ -28,9 +28,13 @@ function Header({ showProfileSet, showNotificationSet }) {
         ) : (
           <div className="count">{data.notifications}</div>
         )}
-      </div>
-      <div className="center">{data.specialtext}</div>
-      <div className="nametag">{data.firstname}</div>
+      </div> */}
+      {/* <div className="center">{data.specialtext}</div> */}
+      {user && (
+        <div className="nametag">
+          {user.first_name} {user.last_name}
+        </div>
+      )}
       <img
         src={data.propic}
         className="profile"

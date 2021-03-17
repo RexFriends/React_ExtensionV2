@@ -20,8 +20,8 @@ chrome.runtime.onInstalled.addListener((response) => {
     uId: 'empty',
     page: 0,
     user: {
-      first_name: 'Joe',
-      last_name: 'Schmo',
+      first_name: 'Loading',
+      last_name: 'User',
     },
     showInjection: true,
   });
@@ -43,11 +43,21 @@ chrome.storage.onChanged.addListener((response) => {
       }
     );
     // makes a fetch call to the for extension dashboard on login
+
     if (response.uId.oldValue === 'empty') {
+      let startTime = new Date();
+      console.log('making fetch request for dashboard load');
+
       fetch(URL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
-          // console.log('extension_dashboard', json);
+          let endTime = new Date();
+          console.log('extension_dashboard', json);
+          console.log(
+            'time passed for initial load:',
+            Math.round((endTime - startTime) / 1000),
+            'seconds'
+          );
           chrome.storage.local.set(json);
         });
     }
@@ -136,7 +146,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       product_id: msg.item_id,
       new_state: true,
     };
-    console.log('fetch request to add closet item:', msg);
+    // console.log('fetch request to add closet item:', msg);
     fetch(URL + '/api/item_closet_change?uid=' + msg.uid, {
       method: 'POST',
       headers: {
@@ -244,18 +254,152 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   }
 
   if (msg.action === 'add_friend_number') {
-    let paylod = {};
+    let payload = {
+      phonenumber: msg.phonenumber,
+    };
+    console.log('payload', payload);
+    fetch(URL + '/api/addfriendnumber?uid=' + msg.uid, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log('result', json);
+        if (json.success === true) {
+          fetch(URL + '/api/getfriends?uid=' + msg.uid)
+            .then((res) => res.json())
+            .then((json) => {
+              let friends = json.contacts;
+              let feedbackNotif = {
+                variant: 'good',
+                message: 'Success!!',
+              };
+              chrome.storage.local.set({ friends });
+              chrome.storage.local.set({ feedbackNotif });
+            });
+        } else {
+          let feedbackNotif = {
+            variant: 'bad',
+            message: json.reason,
+          };
+          chrome.storage.local.set({ feedbackNotif });
+        }
+      });
   }
 
   // finished
   if (msg.action === 'update preview') {
     chrome.storage.local.get(['uId'], (res) => {
-      fetch(URL + '/api/extension_dashboard?uid=' + res.uId)
+      // let startTime = new Date();
+      // console.log('making fetch request for dashboard load');
+      fetch(URL + '/api/closet_preview?uid=' + res.uId)
         .then((res) => res.json())
         .then((json) => {
-          // console.log('extension_dashboard 2', json);
-          chrome.storage.local.set(json);
+          let endTime = new Date();
+          // console.log('extension_dashboard', json);
+          // console.log(
+          //   'time passed for initial load:',
+          //   Math.round((endTime - startTime) / 1000),
+          //   'seconds'
+          // );
+          // console.log('closet_preview', json);
+          let closet_preview = json.closet_preview;
+          chrome.storage.local.set({ closet_preview });
         });
     });
+  }
+  if (msg.action === 'send rex') {
+    let payload = {
+      contact_id: msg.contact_id,
+      product_id: msg.product_id,
+    };
+    fetch(URL + '/api/send_rex?uid=' + msg.uid, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        let feedbackNotif = '';
+        if (json.success === true) {
+          feedbackNotif = {
+            variant: 'good',
+            message: 'Request Sent!',
+          };
+          chrome.storage.local.set({ feedbackNotif });
+        } else {
+          feedbackNotif = {
+            variant: 'bad',
+            message: 'User Opted Out :(',
+          };
+          chrome.storage.local.set({ feedbackNotif });
+        }
+      });
+  }
+  if (msg.action === 'change nickname') {
+    let payload = {
+      contact_id: msg.contact_id,
+      nickname: msg.new_nickname,
+    };
+    fetch(URL + '/api/editfriendnumber?uid=' + msg.uid, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if (json.success === true) {
+          fetch(URL + '/api/getfriends?uid=' + msg.uid)
+            .then((res) => res.json())
+            .then((json) => {
+              let friends = json.contacts;
+              let feedbackNotif = {
+                variant: 'good',
+                message: 'Success!!',
+              };
+              chrome.storage.local.set({ friends });
+              chrome.storage.local.set({ feedbackNotif });
+            });
+        }
+      });
+  }
+  if (msg.action === 'send friend request') {
+    let payload = {
+      username: msg.username,
+    };
+    fetch(URL + '/api/get-user-from-username?uid=' + msg.uid, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.text())
+      .then((json) => {
+        console.log(json);
+        let feedbackNotif = '';
+        if (json.Success === true) {
+          feedbackNotif = {
+            variant: 'good',
+            message: 'Request Sent!',
+          };
+          chrome.storage.local.set({ feedbackNotif });
+        } else {
+          feedbackNotif = {
+            variant: 'bad',
+            message: 'Does Not Exist',
+          };
+          chrome.storage.local.set({ feedbackNotif });
+        }
+      });
   }
 });
