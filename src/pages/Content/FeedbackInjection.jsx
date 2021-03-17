@@ -19,20 +19,20 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   useEffect(() => {
     chrome.storage.local.get('friends', (res) => {
       friendsSet(res.friends);
-      console.log('fetch friends', res.friends);
+      // console.log('fetch friends', res.friends);
     });
     return () => {};
   }, []);
 
   chrome.storage.onChanged.addListener((res) => {
     if (res.friends) {
-      console.log(res.friends.newValue);
+      // console.log(res.friends.newValue);
       friendsSet(res.friends.newValue);
     }
     if (res.feedbackNotif) {
       // console.log('feedback notif update', res.feedbackNotif);
       if (res.feedbackNotif.newValue.message !== 'null') {
-        console.log('show popup');
+        // console.log('show popup');
         feedbackNotifSet(res.feedbackNotif.newValue);
         setTimeout(() => feedbackNotifSet(undefined), 2000);
         let feedbackNotif = { message: null };

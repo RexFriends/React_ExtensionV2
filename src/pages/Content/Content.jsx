@@ -49,7 +49,7 @@ const Content = () => {
       currentURISet(response.uri.newValue);
     }
     if (response.current_copy) {
-      console.log('in chrome', response.current_copy.newValue.copy_link);
+      // console.log('in chrome', response.current_copy.newValue.copy_link);
       let link = response.current_copy.newValue.copy_link;
       currentCopySet(link);
       var inp = document.createElement('input');
