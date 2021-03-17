@@ -45,6 +45,10 @@ const Popup = () => {
         // console.log('fetch user info');
         currentUidSet(user.uid);
         updateState('uId', user.uid);
+        let payload = {
+          action: 'update preview',
+        };
+        chrome.runtime.sendMessage(payload);
       } else {
         currentUidSet('empty');
       }
@@ -103,9 +107,9 @@ const Popup = () => {
     if (response.user) {
       userSet(response.user.newValue);
     }
-    if (response.uId.oldValue === 'empty') {
-      window.close();
-    }
+    // if (response.uId.oldValue === 'empty' | ) {
+    //   window.close();
+    // }
   });
 
   // Handle Sliders

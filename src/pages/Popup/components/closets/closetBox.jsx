@@ -4,24 +4,49 @@ function ClosetBox({ closetData, closetPreview }) {
   let [image, imageSet] = useState([]);
 
   useEffect(() => {
-    //   console.log(clo)
-    let arr = closetPreview.items.slice(0, 4).map((item) => item.img);
+    let arr = closetPreview.items.slice(0, 4).map((item) => {
+      if (item.isWebscraped) {
+        return item.images;
+      } else {
+        return item.img;
+      }
+    });
     Promise.all(
       arr.map((url) =>
         fetch(url)
           .then((res) => res.json())
-          .then((json) => json.uri)
+          .then((json) => {
+            if (json.uri) {
+              return json.uri;
+            } else {
+              return json;
+            }
+          })
           .catch((err) => console.log(err))
       )
     ).then((data) => {
-      imageSet(data);
+      imageSet(
+        data.map((item) => {
+          if (item.img_1) {
+            let base64 = item.img_1;
+            base64 = base64.slice(2);
+            base64 = base64.slice(0, -1);
+            return 'data:image/jpeg;base64,' + base64;
+          } else {
+            return item;
+          }
+        })
+      );
     });
 
     return () => {};
   }, []);
 
+  useEffect(() => {
+    console.log('image state', image);
+  }, [image]);
+
   const handleOpenCloset = () => {
-    console.log('open closet');
     chrome.tabs.create({
       url: 'https://rexfriends.com/closets/' + closetPreview.id,
     });

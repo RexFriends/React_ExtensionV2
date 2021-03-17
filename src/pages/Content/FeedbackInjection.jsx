@@ -32,11 +32,13 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     if (res.feedbackNotif) {
       // console.log('feedback notif update', res.feedbackNotif);
       if (res.feedbackNotif.newValue.message !== 'null') {
-        // console.log('show popup');
+        // console.log('show popup', res.feedbackNotif.newValue.message);
         feedbackNotifSet(res.feedbackNotif.newValue);
         setTimeout(() => feedbackNotifSet(undefined), 2000);
-        let feedbackNotif = { message: null };
-        chrome.storage.local.set({ feedbackNotif });
+        setTimeout(() => {
+          let feedbackNotif = { message: null };
+          chrome.storage.local.set({ feedbackNotif });
+        }, 2000);
       }
     }
   });

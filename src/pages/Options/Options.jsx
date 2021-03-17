@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import Switch from '@material-ui/core/Switch';
-import Button from '@material-ui/core/Button';
 import './Options.scss';
 
 const Options = () => {

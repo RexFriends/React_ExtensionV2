@@ -383,7 +383,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       },
       body: JSON.stringify(payload),
     })
-      .then((res) => res.text())
+      .then((res) => res.json())
       .then((json) => {
         console.log(json);
         let feedbackNotif = '';

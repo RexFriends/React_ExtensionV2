@@ -10,15 +10,6 @@ function NewClosets({ uid, closetData, closetPreviews }) {
   const [currentIndex, currentIndexSet] = useState(0);
 
   useEffect(() => {
-    let payload = {
-      action: 'update preview',
-    };
-
-    chrome.runtime.sendMessage(payload);
-    return () => {};
-  }, []);
-
-  useEffect(() => {
     currentIndexSet(closetStartIndex);
 
     return () => {};
@@ -54,10 +45,14 @@ function NewClosets({ uid, closetData, closetPreviews }) {
                       //   console.log('index & i', currentIndex, i, closet);
                       return (
                         <div id="row" key={i}>
-                          <ClosetBox
-                            closetData={closetData[currentIndex * 2 + i]}
-                            closetPreview={closetPreviews[currentIndex * 2 + i]}
-                          />
+                          {closetData[currentIndex * 2 + i] && (
+                            <ClosetBox
+                              closetData={closetData[currentIndex * 2 + i]}
+                              closetPreview={
+                                closetPreviews[currentIndex * 2 + i]
+                              }
+                            />
+                          )}
                           {closetData[currentIndex * 2 + i + 1] ? (
                             <ClosetBox
                               closetData={closetData[currentIndex * 2 + i + 1]}
