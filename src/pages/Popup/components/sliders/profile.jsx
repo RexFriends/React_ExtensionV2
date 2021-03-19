@@ -27,8 +27,8 @@ function Profile({ showProfileSet }) {
       .auth()
       .signOut()
       .then(() => {
+        chrome.storage.local.clear();
         updateState('uId', 'empty');
-        // successful log out
       })
       .catch((error) => {
         console.log(error);
