@@ -43,9 +43,9 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     }
   });
 
-  const handleSearchFriend = () => {
-    showSearchFriendSet(true);
-  };
+  // const handleSearchFriend = () => {
+  //   showSearchFriendSet(true);
+  // };
   const handleAddFriendShow = () => {
     showAddFriendSet(true);
   };
@@ -71,18 +71,18 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     chrome.runtime.sendMessage(payload);
   };
 
-  const handleSearch = () => {
-    if (inputField !== '') {
-      let payload = {
-        action: 'send friend request',
-        username: inputField,
-        uid: uid,
-      };
-      chrome.runtime.sendMessage(payload);
-    }
-    inputFieldSet('');
-    showSearchFriendSet(false);
-  };
+  // const handleSearch = () => {
+  //   if (inputField !== '') {
+  //     let payload = {
+  //       action: 'send friend request',
+  //       username: inputField,
+  //       uid: uid,
+  //     };
+  //     chrome.runtime.sendMessage(payload);
+  //   }
+  //   inputFieldSet('');
+  //   showSearchFriendSet(false);
+  // };
 
   const handleAdd = () => {
     if (inputField !== '' && inputField !== '0') {
@@ -149,60 +149,63 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
           </AnimatePresence>
         </div>
         <div id="rex-content">
-          {showSearchFriend ? (
-            <div id="searchbar">
-              <input
-                id="input"
-                placeholder="Search for a Friend"
-                autoComplete="off"
-                maxLength="15"
-                value={inputField}
-                onChange={(e) => inputFieldSet(e.target.value)}
-              />
-              <IconButton onClick={handleSearch} size="small" id="searchbutton">
-                <AiOutlineSearch id="svg" />
-              </IconButton>
-            </div>
-          ) : showAddFriend ? (
-            <div id="searchbar">
-              <input
-                type="tel"
-                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                required
-                id="input"
-                placeholder="Add Phone Number"
-                autoComplete="off"
-                maxLength="15"
-                value={inputField}
-                onChange={(e) => inputFieldSet(e.target.value)}
-              />
-              <IconButton onClick={handleAdd} size="small" id="searchbutton">
-                <AiOutlineUserAdd id="svg" />
-              </IconButton>
-            </div>
-          ) : (
-            (showAddFriend === false) & (showSearchFriend === false) && (
-              <div id="addfriend">
-                <Button
-                  onClick={handleSearchFriend}
-                  startIcon={<AiOutlineSearch id="svg" />}
-                  size="small"
-                >
-                  Search
-                </Button>
-                <Button
-                  onClick={handleAddFriendShow}
-                  startIcon={<AiOutlineUserAdd id="svg" />}
-                  size="small"
-                >
-                  Invite
-                </Button>
+          {
+            // showSearchFriend ? (
+            //   <div id="searchbar">
+            //     <input
+            //       id="input"
+            //       placeholder="Search for a Friend"
+            //       autoComplete="off"
+            //       maxLength="15"
+            //       value={inputField}
+            //       onChange={(e) => inputFieldSet(e.target.value)}
+            //     />
+            //     <IconButton onClick={handleSearch} size="small" id="searchbutton">
+            //       <AiOutlineSearch id="svg" />
+            //     </IconButton>
+            //   </div>
+            // ) :
+            showAddFriend ? (
+              <div id="searchbar">
+                <input
+                  type="tel"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  required
+                  id="input"
+                  placeholder="Add Phone Number"
+                  autoComplete="off"
+                  maxLength="15"
+                  value={inputField}
+                  onChange={(e) => inputFieldSet(e.target.value)}
+                />
+                <IconButton onClick={handleAdd} size="small" id="searchbutton">
+                  <AiOutlineUserAdd id="svg" />
+                </IconButton>
               </div>
+            ) : (
+              showAddFriend === false && (
+                // & (showSearchFriend === false)
+                <div id="addfriend">
+                  {/* <Button
+                    onClick={handleSearchFriend}
+                    startIcon={<AiOutlineSearch id="svg" />}
+                    size="small"
+                  >
+                    Search
+                  </Button> */}
+                  <Button
+                    onClick={handleAddFriendShow}
+                    startIcon={<AiOutlineUserAdd id="svg" />}
+                    size="small"
+                  >
+                    Invite
+                  </Button>
+                </div>
+              )
             )
-          )}
+          }
 
           <div id="friendList">
-            {/* show newest first */}
             {friends &&
               friends
                 .slice(0)

@@ -48,7 +48,7 @@ function ClosetBox({ closetData, closetPreview }) {
 
   const handleOpenCloset = () => {
     chrome.tabs.create({
-      url: 'https://rexfriends.com/closets/' + closetPreview.id,
+      url: 'https://app.rexfriends.com/closets/' + closetPreview.id,
     });
   };
 

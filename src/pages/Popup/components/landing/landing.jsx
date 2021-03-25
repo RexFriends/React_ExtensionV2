@@ -32,7 +32,7 @@ function Landing() {
           handleCustomSignin(res.user.uid, res.user.email);
         })
         .catch((error) => {
-          console.log('custom signin error', error);
+          errorSet(error.message);
         });
     } else if (signup) {
       firebase
@@ -49,7 +49,7 @@ function Landing() {
           );
         })
         .catch((error) => {
-          console.log('custom signup error', error);
+          errorSet(error.message);
         });
     }
   };
@@ -67,7 +67,7 @@ function Landing() {
         );
       })
       .catch((error) => {
-        console.log('google signup error:', error.message);
+        showSigninError(error.message);
       });
   }
 
@@ -81,7 +81,27 @@ function Landing() {
       })
       .catch((error) => {
         console.log('facebook signup error:', error);
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          //! This needs to be displayed & showed to user
+          // console.log('Account with Email already exist. Try google signin');
+          showSigninError(
+            'Account with Associated Email already exist. Try Google Login'
+          );
+        } else {
+          showSigninError(error.message);
+        }
       });
+  }
+
+  function handleCustomSignin(uid, email) {
+    let payload = {
+      action: 'custom-signin',
+      uid: uid,
+      email: email,
+    };
+    chrome.runtime.sendMessage(payload, (reply) => {
+      console.log('sent custom signin to background', reply);
+    });
   }
 
   function handleSuccessfulLogin(
@@ -101,16 +121,9 @@ function Landing() {
     };
     chrome.runtime.sendMessage(payload);
   }
-  function handleCustomSignin(uid, email) {
-    let payload = {
-      action: 'custom-signin',
-      uid: uid,
-      email: email,
-    };
-    chrome.runtime.sendMessage(payload, (reply) => {
-      console.log('sent custom signin to background', reply);
-    });
-  }
+  const showSigninError = (msg) => {
+    errorSet(msg);
+  };
 
   return (
     <motion.div
@@ -244,7 +257,6 @@ function Landing() {
               facebookSignUp();
             }}
           >
-            {' '}
             Login with Facebook
           </Button>
           <Button
@@ -254,9 +266,9 @@ function Landing() {
               googleSignUp();
             }}
           >
-            {' '}
             Login with Google
           </Button>
+          <div className="error-box">{error && error}</div>
         </div>
         <div className="signup">
           <div onClick={() => emailLoginSet(false)}>Don't have an account?</div>
@@ -267,7 +279,7 @@ function Landing() {
               emailLoginSet(false);
             }}
           >
-            Sign-up
+            Signup
           </Button>
         </div>
       </div>

@@ -49,6 +49,7 @@
         font-weight: 600;
       }
       #cart-icon {
+        cursor: pointer;
         margin-top: 15px;
         background-color: rgb(236, 236, 236);
         border-top-left-radius: 5px;
@@ -84,6 +85,7 @@
       }
 
       #cart-icon {
+        cursor: pointer;
         margin-top: 15px;
         background-color: rgb(236, 236, 236);
         border-top-left-radius: 5px;
@@ -108,14 +110,14 @@
           width: 100%;
           border-radius: 0px;
           margin-left: 3px;
-          border-bottom: 2px solid rgba(43, 42, 42, 0.521);
+          // border-bottom: 2px solid rgba(43, 42, 42, 0.521);
           margin-bottom: 2px;
         }
         #new-closet {
           margin-top: 0px;
           height: 24px;
           // background-color: #24bdaf;
-          padding: 5px 0px;
+          padding: 2px 0px;
           width: 100%;
           border-radius: 0px;
           margin-bottom: 2px;
@@ -123,13 +125,13 @@
         #new-closet-field {
           padding: 5px 0px;
           margin-top: 0px;
-          height: 24px;
+          height: 35px;
           // background-color: #24bdaf;
           width: 176px;
           display: flex;
           margin-bottom: 2px;
           margin-left: 3px;
-          border-bottom: 2px solid rgba(43, 42, 42, 0.521);
+          // border-bottom: 2px solid rgba(43, 42, 42, 0.521);
           #textfield {
             margin-top: -2px;
             background: transparent;

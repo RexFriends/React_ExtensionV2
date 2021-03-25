@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener((response) => {
   // redirect user to website on install
   chrome.tabs.create({
     active: true,
-    url: 'https://google.com',
+    url: 'https://rexfriends.com',
   });
   // these clear all stoarge, not sure if neccessary for prod
   chrome.storage.sync.clear();
@@ -74,7 +74,6 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       phone: msg.phone,
       uid: msg.uid,
     };
-    // console.log('fetch request to login-signup', payload);
     fetch(URL + '/api/signupweb', {
       method: 'POST',
       headers: {
@@ -86,6 +85,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       .then((json) => console.log('signupweb fetch result:', json));
     return;
   }
+
   // this fetch call may not be neccessary
   if (msg.action === 'custom-signin') {
     let payload = {
@@ -292,13 +292,16 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
 
   // finished
   if (msg.action === 'update preview') {
-    chrome.storage.local.get(['uId'], (res) => {
+    // console.log(msg);
+    if (msg.uid) {
+      let uId = msg.uid;
+      chrome.storage.local.set({ uId });
       // let startTime = new Date();
       // console.log('making fetch request for dashboard load');
-      fetch(URL + '/api/closet_preview?uid=' + res.uId)
+      fetch(URL + '/api/closet_preview?uid=' + msg.uid)
         .then((res) => res.json())
         .then((json) => {
-          let endTime = new Date();
+          // let endTime = new Date();
           // console.log('extension_dashboard', json);
           // console.log(
           //   'time passed for initial load:',
@@ -309,7 +312,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           let closet_preview = json.closet_preview;
           chrome.storage.local.set({ closet_preview });
         });
-    });
+    }
   }
   if (msg.action === 'send rex') {
     let payload = {
@@ -401,5 +404,15 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           chrome.storage.local.set({ feedbackNotif });
         }
       });
+  }
+  if (msg.action === 'update notification') {
+    chrome.storage.local.get('uId', (res) => {
+      fetch(URL + '/api/get_notif?uid=' + res.uId)
+        .then((res) => res.json())
+        .then((json) => {
+          let notifications = json.notifications;
+          chrome.storage.local.set({ notifications });
+        });
+    });
   }
 });

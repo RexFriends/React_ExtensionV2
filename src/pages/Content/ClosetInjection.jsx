@@ -63,6 +63,7 @@ function ClosetInjection({
   const classes = useStyles();
   const [showNewClosetField, showNewClosetFieldSet] = useState(false);
   const [newClosetText, newClosetTextSet] = useState('');
+
   const handleNewCloset = () => {
     if (newClosetText !== '') {
       let payload = {

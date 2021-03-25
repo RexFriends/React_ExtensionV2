@@ -1,29 +1,43 @@
-import React from 'react'
-import {motion} from 'framer-motion'
+import React from 'react';
+import { motion } from 'framer-motion';
+import IconButton from '@material-ui/core/IconButton';
+import { AiOutlineClose } from 'react-icons/ai';
+import { FiHome } from 'react-icons/fi';
+function Notification({ showNotificationSet }) {
+  const spring = {
+    type: 'spring',
+    damping: 20,
+    stiffness: 100,
+  };
 
-function Notification ({showNotificationSet})  {
-    const spring = {
-        type: "spring",
-        damping: 20,
-        stiffness: 100
-      }
-
-
-    return(
-        
-            <motion.div  className="Notification" 
-                animate={{ width: 275, x: 0}}
-                initial={{ width: 0, x: -275 }}
-                exit={{ x: -275 }}
-                transition={{spring}}
-               
-            >  
-                <h2>Notification Slider</h2>
-                <button onClick={()=>{showNotificationSet(false)}}>X</button>
-            </motion.div>     
-
-
-    )
+  const openRexPage = () => {
+    chrome.tabs.create({
+      url: 'https://app.rexfriends.com/',
+    });
+  };
+  return (
+    <motion.div
+      className="Notification"
+      animate={{ width: 275, x: 0 }}
+      initial={{ width: 0, x: -275 }}
+      exit={{ x: -275 }}
+      transition={{ spring }}
+    >
+      <div id="top">
+        <IconButton onClick={openRexPage}>
+          <FiHome />
+        </IconButton>
+        <div>in dev</div>
+        <IconButton
+          onClick={() => {
+            showNotificationSet(false);
+          }}
+        >
+          <AiOutlineClose />
+        </IconButton>
+      </div>
+    </motion.div>
+  );
 }
 
-export default Notification
+export default Notification;

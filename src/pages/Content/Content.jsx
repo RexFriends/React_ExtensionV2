@@ -107,6 +107,11 @@ const Content = () => {
     }
   };
 
+  const handleOpenRexApp = () => {
+    let url = 'https://app.rexfriends.com/closets/';
+    window.open(url, '_blank');
+  };
+
   return (
     <>
       <AnimatePresence>
@@ -140,10 +145,8 @@ const Content = () => {
                           transition={{ type: 'tween' }}
                           exit={{ x: 100 }}
                         >
-                          <IconButton id="save-button" onClick={handleSaveItem}>
-                            Save Item
-                          </IconButton>
                           <img
+                            onClick={handleSaveItem}
                             id="cart-icon"
                             src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-cart-nocheck.png"
                             alt="itemsavedicon"
@@ -207,6 +210,7 @@ const Content = () => {
                             </IconButton>
                           </div>
                           <img
+                            onClick={handleOpenRexApp}
                             id="cart-icon"
                             src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-cart-check.png"
                             alt="itemsavedicon"

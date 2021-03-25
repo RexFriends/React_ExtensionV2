@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { updateState } from '../../chromeTools';
 import { AiOutlineClose, AiTwotoneSetting } from 'react-icons/ai';
 import Button from '@material-ui/core/Button';
 import { motion } from 'framer-motion';
@@ -27,8 +26,17 @@ function Profile({ showProfileSet }) {
       .auth()
       .signOut()
       .then(() => {
+        chrome.storage.sync.clear();
         chrome.storage.local.clear();
-        updateState('uId', 'empty');
+        chrome.storage.local.set({
+          uId: 'empty',
+          page: 0,
+          user: {
+            first_name: 'Loading',
+            last_name: 'User',
+          },
+          showInjection: true,
+        });
       })
       .catch((error) => {
         console.log(error);

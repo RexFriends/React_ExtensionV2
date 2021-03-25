@@ -31,6 +31,8 @@ const Popup = () => {
   const [homePageData, homePageDataSet] = useState(undefined);
   const [friendsData, friendsDataSet] = useState(undefined);
   const [currentItemData, currentItemDataSet] = useState(undefined);
+  const [notificationData, notificationDataSet] = useState(undefined);
+  const [notificationCount, notificationCountSet] = useState(undefined);
   const [closetData, closetDataSet] = useState([]);
   const [closetPreviewData, closetPreviewDataSet] = useState([]);
   const [user, userSet] = useState(undefined);
@@ -43,10 +45,12 @@ const Popup = () => {
       if (user) {
         // make a fetch to get user info based on user.uid (or do this in dashboard)
         // console.log('fetch user info');
+        // console.log('user change', user.email);
         currentUidSet(user.uid);
         updateState('uId', user.uid);
         let payload = {
           action: 'update preview',
+          uid: user.uid,
         };
         chrome.runtime.sendMessage(payload);
       } else {
@@ -54,9 +58,16 @@ const Popup = () => {
       }
     });
   }
+  function updateNotifications() {
+    let payload = {
+      action: 'update notification',
+    };
+    chrome.runtime.sendMessage(payload);
+  }
 
   useEffect(() => {
     fetchUserInfo();
+    updateNotifications();
     chrome.storage.local.get(
       [
         'current_item',
@@ -67,6 +78,7 @@ const Popup = () => {
         'page',
         'uId',
         'user',
+        'notifications',
       ],
       (res) => {
         console.log(res.user);
@@ -78,6 +90,8 @@ const Popup = () => {
         setPage([res.page, 0]);
         currentUidSet(res.uId);
         userSet(res.user);
+        notificationDataSet(res.notifications);
+        notificationCountSet(res.notifications.amount);
       }
     );
     return () => {};
@@ -107,9 +121,10 @@ const Popup = () => {
     if (response.user) {
       userSet(response.user.newValue);
     }
-    // if (response.uId.oldValue === 'empty' | ) {
-    //   window.close();
-    // }
+    if (response.notifications) {
+      notificationDataSet(response.notifications.newValue);
+      notificationCountSet(res.notifications.newValue.amount);
+    }
   });
 
   // Handle Sliders
@@ -182,6 +197,7 @@ const Popup = () => {
 
       {/* General UI */}
       <Header
+        notificationCount={notificationCount}
         showProfileSet={showProfileSet}
         showNotificationSet={showNotificationSet}
         user={user}

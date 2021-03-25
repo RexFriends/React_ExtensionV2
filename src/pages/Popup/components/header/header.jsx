@@ -1,7 +1,12 @@
 import React from 'react';
 import { IoMail } from 'react-icons/io5';
 
-function Header({ showProfileSet, showNotificationSet, user }) {
+function Header({
+  showProfileSet,
+  showNotificationSet,
+  user,
+  notificationCount,
+}) {
   const data = {
     notifications: 100,
     firstname: 'Firstname Lastname',
@@ -12,24 +17,24 @@ function Header({ showProfileSet, showNotificationSet, user }) {
 
   return (
     <div className="Header">
-      {/* <IoMail
+      <IoMail
         className="notif"
         onClick={() => {
           showProfileSet(false);
           showNotificationSet(true);
         }}
-      /> */}
-      {/* <div className="badge">
-        {data.notifications > 99 ? (
+      />
+      <div className="badge">
+        {notificationCount > 99 ? (
           <>
             <div className="count">99</div>
             <div className="excess">+</div>
           </>
         ) : (
-          <div className="count">{data.notifications}</div>
+          <div className="count">{notificationCount}</div>
         )}
-      </div> */}
-      {/* <div className="center">{data.specialtext}</div> */}
+      </div>
+      <div className="center"></div>
       {user && (
         <div className="nametag">
           {user.first_name} {user.last_name}

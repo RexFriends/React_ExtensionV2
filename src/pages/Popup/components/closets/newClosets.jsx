@@ -8,9 +8,10 @@ import EmptyBox from './EmptyBox';
 function NewClosets({ uid, closetData, closetPreviews }) {
   const [[direction, closetStartIndex], closetStartIndexSet] = useState([0, 0]);
   const [currentIndex, currentIndexSet] = useState(0);
-
+  const [handleRefresh, handleRefreshSet] = useState(false);
   useEffect(() => {
     currentIndexSet(closetStartIndex);
+    setTimeout(() => handleRefreshSet(!handleRefresh), 500);
 
     return () => {};
   }, [closetStartIndex]);
