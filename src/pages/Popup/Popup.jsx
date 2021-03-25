@@ -135,13 +135,13 @@ const Popup = () => {
 
   // All current pages
   let pages = [
-    // <CurrentItem
-    //   uid={currentUid}
-    //   currentItem={currentItemData}
-    //   closets={closetData}
-    //   friends={friendsData}
-    // />,
-    // <Home uid={currentUid} homepageData={homePageData}/>,
+    <CurrentItem
+      uid={currentUid}
+      currentItem={currentItemData}
+      closets={closetData}
+      friends={friendsData}
+    />,
+    // <Home uid={currentUid} homepageData={homePageData} />,
     <Closets
       uid={currentUid}
       closetData={closetData}

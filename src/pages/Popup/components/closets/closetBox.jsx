@@ -43,7 +43,7 @@ function ClosetBox({ closetData, closetPreview }) {
   }, []);
 
   useEffect(() => {
-    console.log('image state', image);
+    // console.log('image state', image);
   }, [image]);
 
   const handleOpenCloset = () => {
