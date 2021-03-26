@@ -1,5 +1,5 @@
 {
-  "name": "Rex Chrome Extension v3 - with React & Webpack ",
+  "name": "Rex - Social Shopping Assistant",
   "options_page": "options.html",
   "background": {
     "page": "background.html"
