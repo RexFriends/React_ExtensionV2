@@ -1,7 +1,7 @@
 import '../../assets/img/icon-34.png';
 import '../../assets/img/icon-128.png';
 import '../../assets/img/128.png';
-import URL from '../../assets/url';
+import APIURL from '../../assets/url';
 
 console.log('This is the background page.');
 
@@ -46,9 +46,9 @@ chrome.storage.onChanged.addListener((response) => {
 
     if (response.uId.oldValue === 'empty') {
       let startTime = new Date();
-      console.log('making fetch request for dashboard load');
 
-      fetch(URL + '/api/extension_dashboard?uid=' + response.uId.newValue)
+      console.log('making fetch request for dashboard load', response.uId);
+      fetch(APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
           let endTime = new Date();
@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       phone: msg.phone,
       uid: msg.uid,
     };
-    fetch(URL + '/api/signupweb', {
+    fetch(APIURL + '/api/signupweb', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -86,25 +86,6 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     return;
   }
 
-  // this fetch call may not be neccessary
-  if (msg.action === 'custom-signin') {
-    let payload = {
-      uid: msg.uid,
-      email: msg.email,
-    };
-    // console.log('fetch request to custom-signin', payload);
-    fetch(URL + '/api/webdashboard?uid=' + msg.uid, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((json) => console.log('custom-signin fetch result:', json));
-
-    return;
-  }
   // finished
   if (msg.action === 'save-item') {
     chrome.tabs.captureVisibleTab(sender_info.tab.windowId, function (image) {
@@ -115,7 +96,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             ImagePNG: image,
           };
           // console.log('fetch request to /api/save-rex:', payload);
-          fetch(URL + '/api/save-rex?uid=' + result.uId, {
+          fetch(APIURL + '/api/save-rex?uid=' + result.uId, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -147,7 +128,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       new_state: true,
     };
     // console.log('fetch request to add closet item:', msg);
-    fetch(URL + '/api/item_closet_change?uid=' + msg.uid, {
+    fetch(APIURL + '/api/item_closet_change?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -172,7 +153,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       new_state: false,
     };
     // console.log('fetch request to remove closet item:', msg);
-    fetch(URL + '/api/item_closet_change?uid=' + msg.uid, {
+    fetch(APIURL + '/api/item_closet_change?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +179,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       product_id: msg.item_id,
     };
     // console.log('add item to new closet', payload);
-    fetch(URL + '/api/new_closet_with_item?uid=' + msg.uid, {
+    fetch(APIURL + '/api/new_closet_with_item?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -221,7 +202,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   //
   if (msg.action === 'get_currentItem') {
     // console.log('update current item', msg);
-    fetch(URL + `/api/get_item/${msg.currentItemId}?uid=` + msg.uid)
+    fetch(APIURL + `/api/get_item/${msg.currentItemId}?uid=` + msg.uid)
       .then((res) => res.json())
       .then((json) => {
         let current_item = json.current_item;
@@ -235,7 +216,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       listing_id: msg.listing_id,
     };
     // console.log('copy link', payload);
-    fetch(URL + '/api/copy_feedback_link?uid=' + msg.uid, {
+    fetch(APIURL + '/api/copy_feedback_link?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -258,7 +239,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       phonenumber: msg.phonenumber,
     };
     console.log('payload', payload);
-    fetch(URL + '/api/addfriendnumber?uid=' + msg.uid, {
+    fetch(APIURL + '/api/addfriendnumber?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -269,7 +250,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       .then((json) => {
         console.log('result', json);
         if (json.success === true) {
-          fetch(URL + '/api/getfriends?uid=' + msg.uid)
+          fetch(APIURL + '/api/getfriends?uid=' + msg.uid)
             .then((res) => res.json())
             .then((json) => {
               let friends = json.contacts;
@@ -296,19 +277,9 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     if (msg.uid) {
       let uId = msg.uid;
       chrome.storage.local.set({ uId });
-      // let startTime = new Date();
-      // console.log('making fetch request for dashboard load');
-      fetch(URL + '/api/closet_preview?uid=' + msg.uid)
+      fetch(APIURL + '/api/closet_preview?uid=' + msg.uid)
         .then((res) => res.json())
         .then((json) => {
-          // let endTime = new Date();
-          // console.log('extension_dashboard', json);
-          // console.log(
-          //   'time passed for initial load:',
-          //   Math.round((endTime - startTime) / 1000),
-          //   'seconds'
-          // );
-          // console.log('closet_preview', json);
           let closet_preview = json.closet_preview;
           chrome.storage.local.set({ closet_preview });
         });
@@ -319,7 +290,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       contact_id: msg.contact_id,
       product_id: msg.product_id,
     };
-    fetch(URL + '/api/send_rex?uid=' + msg.uid, {
+    fetch(APIURL + '/api/send_rex?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -350,7 +321,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       contact_id: msg.contact_id,
       nickname: msg.new_nickname,
     };
-    fetch(URL + '/api/editfriendnumber?uid=' + msg.uid, {
+    fetch(APIURL + '/api/editfriendnumber?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -361,7 +332,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       .then((json) => {
         console.log(json);
         if (json.success === true) {
-          fetch(URL + '/api/getfriends?uid=' + msg.uid)
+          fetch(APIURL + '/api/getfriends?uid=' + msg.uid)
             .then((res) => res.json())
             .then((json) => {
               let friends = json.contacts;
@@ -379,7 +350,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     let payload = {
       username: msg.username,
     };
-    fetch(URL + '/api/get-user-from-username?uid=' + msg.uid, {
+    fetch(APIURL + '/api/get-user-from-username?uid=' + msg.uid, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -407,7 +378,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   }
   if (msg.action === 'update notification') {
     chrome.storage.local.get('uId', (res) => {
-      fetch(URL + '/api/get_notif?uid=' + res.uId)
+      fetch(APIURL + '/api/get_notif?uid=' + res.uId)
         .then((res) => res.json())
         .then((json) => {
           let notifications = json.notifications;

@@ -78,6 +78,7 @@ const Content = () => {
     itemSavedSet('loading');
     setTimeout(() => chrome.runtime.sendMessage(payload), 500);
     setTimeout(() => itemSavedSet('saved'), 1000);
+    setTimeout(() => handleManageCloset(), 1000);
   };
 
   const handleManageCloset = () => {
