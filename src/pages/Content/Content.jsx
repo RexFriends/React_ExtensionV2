@@ -38,6 +38,7 @@ const Content = () => {
       }
     }
     if (response.closet_save_error) {
+      console.log('error appears');
       if (response.closet_save_error.newValue) {
         closetSaveErrorSet(response.closet_save_error.newValue);
         chrome.storage.local.set({ closet_save_error: undefined });

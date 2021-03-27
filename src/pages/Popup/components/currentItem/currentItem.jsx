@@ -32,15 +32,13 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   const [feedbackSuccess, feedbackSuccessSet] = useState(false);
   const [images, imagesSet] = useState([]);
   const [imageIndex, imageIndexSet] = useState(0);
-  const [showCopiedLink, showCopiedLinkSet] = useState(undefined);
-  const [currentCopy, currentCopySet] = useState('');
   const [currentItemExist, currentItemExistSet] = useState(true);
+  const [showAlert, showAlertSet] = useState(undefined);
 
   const closetInput = useRef(null);
 
   useEffect(() => {
-    console.log('Current Item');
-
+    //*  only runs if user is new
     if (JSON.stringify(currentItem) === '{}') {
       currentItemExistSet(false);
       return;
@@ -78,11 +76,10 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
               imagesSet([images[0]]);
             });
         } else {
-          // ! display screenshot if webscraper is unsuccessful
+          //* display screenshot if webscraper is unsuccessful
           fetch(currentItem.screenshot)
             .then((res) => res.json())
             .then((json) => {
-              // console.log('this is the screenshot fetch data', json);
               images.push(<img src={json.uri} id="img" />);
               imagesSet(images);
             });
@@ -94,18 +91,20 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   }, [currentItem]);
 
   chrome.storage.onChanged.addListener((response) => {
-    if (response.current_copy) {
-      // console.log('in chrome', response.current_copy.newValue.copy_link);
+    if (response.current_copy && response.current_copy.newValue !== null) {
       let link = response.current_copy.newValue.copy_link;
-      currentCopySet(link);
       var inp = document.createElement('input');
       document.body.appendChild(inp);
       inp.value = link;
       inp.select();
       document.execCommand('copy', false);
       inp.remove();
+      showAlertSet(`Copied! ${link.substr(8)}`);
+      setTimeout(() => showAlertSet(undefined), 2000);
+      setTimeout(() => chrome.storage.local.set({ current_copy: null }), 2500);
     }
   });
+
   // focuses on new textbox when rendered
   useEffect(() => {
     if (closetInput.current !== null) {
@@ -259,8 +258,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
       listing_id: currentItem.id,
     };
     chrome.runtime.sendMessage(payload);
-    setTimeout(() => showCopiedLinkSet(true), 500);
-    setTimeout(() => showCopiedLinkSet(false), 5000);
   };
 
   // ! fetch request
@@ -339,6 +336,18 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                   ? 'Info'
                   : 'Closets'}
               </div>
+              <AnimatePresence>
+                {showAlert && (
+                  <motion.div
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 100, opacity: 0 }}
+                    id="alert"
+                  >
+                    {showAlert}
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <IconButton onClick={handleCopyLink} className="icon">
                 <FaCopy />
               </IconButton>
@@ -411,7 +420,7 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
               )}
             </AnimatePresence>
             {/* Friend Feedback */}
-            <AnimatePresence>
+            {/* <AnimatePresence>
               {friendDetail && (
                 <motion.div
                   id="feedback"
@@ -465,7 +474,7 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                   )}
                 </motion.div>
               )}
-            </AnimatePresence>
+            </AnimatePresence> */}
           </div>
         </>
       ) : (

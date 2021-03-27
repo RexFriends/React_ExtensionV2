@@ -72,6 +72,11 @@ chrome.storage.onChanged.addListener((response) => {
 
 //* These are all listening to either content or popup to make fetch calls & state changes. (Kind of like redux dispatch)
 chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
+  //* console logs in background js
+  if (msg.action === 'log') {
+    console.log(msg.msg, msg.log);
+  }
+
   //* Creates new account / logs user in if using Google/FB OAuth
   if (msg.action === 'login-signup') {
     let payload = {
@@ -111,6 +116,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             .then((response) => response.json())
             .then((json) => {
               if (json.success === false) {
+                console.log(json);
                 chrome.storage.local.set({ closet_save_error: json.reason });
               }
               if (json.currentItem) {
