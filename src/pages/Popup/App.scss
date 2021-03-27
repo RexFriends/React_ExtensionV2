@@ -401,18 +401,6 @@ html {
     }
   }
   .CurrentItem {
-    &#empty {
-      font-size: 36px;
-      padding: 20px;
-      text-align: center;
-      #text {
-        background-color: #ececec;
-        border-radius: 10px;
-        font-weight: 500;
-        color: #6c6c6c;
-      }
-    }
-
     height: 100%;
 
     #header {
@@ -755,6 +743,31 @@ html {
             // border: solid blue 2px;
             font-family: 'Baloo 2';
           }
+        }
+      }
+    }
+
+    #TutorialCurrent {
+      color: rgb(112, 112, 112);
+      h2 {
+        margin-bottom: 0px;
+        font-size: 36px;
+      }
+      #icon {
+        // border: solid red 2px;
+      }
+      #text {
+        font-size: 16px;
+      }
+      #text2 {
+        // border: solid red 2px;
+        font-size: 14px;
+        color: rgb(71, 71, 71);
+        height: 50px;
+        #cart {
+          margin-bottom: -20px;
+          width: 50px;
+          height: 50px;
         }
       }
     }

@@ -18,6 +18,7 @@ import { MdNavigateBefore } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
 import Carousel, { Dots } from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
+import Image from '../../../../assets/img/Asset 1.png';
 
 function CurrentItem({ uid, currentItem, closets, friends }) {
   const [showPage, showPageSet] = useState('feedback');
@@ -33,11 +34,18 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   const [imageIndex, imageIndexSet] = useState(0);
   const [showCopiedLink, showCopiedLinkSet] = useState(undefined);
   const [currentCopy, currentCopySet] = useState('');
+  const [currentItemExist, currentItemExistSet] = useState(true);
 
   const closetInput = useRef(null);
 
   useEffect(() => {
-    // console.log('Current Item', currentItem);
+    console.log('Current Item');
+
+    if (JSON.stringify(currentItem) === '{}') {
+      currentItemExistSet(false);
+      return;
+    }
+
     if (currentItem) {
       chrome.storage.local.get(['uId'], (res) => {
         let payload = {
@@ -302,153 +310,180 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
 
   return (
     <div className="CurrentItem">
-      <div id="header">Your Last Saved Item . . .</div>
-
-      <div id="carousel">
-        <Carousel
-          value={imageIndex}
-          slides={images}
-          onChange={handleCarousel}
-          plugins={['centered']}
-        />
-        {/* Don't need a dot carousel if there's only one image */}
-        {/* <Dots
-          value={imageIndex}
-          onChange={handleCarousel}
-          number={images.length}
-        /> */}
-      </div>
-      <div id="options">
-        <div id="features">
-          <IconButton onClick={() => handlePage('closet')} className="icon">
-            {showPage === 'closet' ? <VscChromeClose /> : <BiCloset />}
-          </IconButton>
-          <div className="text">
-            {showPage === 'feedback'
-              ? 'Feedback'
-              : showPage === 'info'
-              ? 'Info'
-              : 'Closets'}
+      {currentItemExist ? (
+        <>
+          <div id="header">Your Last Saved Item . . .</div>
+          <div id="carousel">
+            <Carousel
+              value={imageIndex}
+              slides={images}
+              onChange={handleCarousel}
+              plugins={['centered']}
+            />
+            {/* Don't need a dot carousel if there's only one image */}
+            {/* <Dots
+            value={imageIndex}
+            onChange={handleCarousel}
+            number={images.length}
+          /> */}
           </div>
-          <IconButton onClick={handleCopyLink} className="icon">
-            <FaCopy />
-          </IconButton>
-        </div>
-        <div id="friends">
-          <div className="friends-nav">
-            {friendList > 0 && (
-              <IconButton onClick={handlePrevFriendsRow} id="prev" size="small">
-                <MdNavigateBefore />
+          <div id="options">
+            <div id="features">
+              <IconButton onClick={() => handlePage('closet')} className="icon">
+                {showPage === 'closet' ? <VscChromeClose /> : <BiCloset />}
               </IconButton>
-            )}
-          </div>
-
-          <AnimatePresence custom={direction} initial={false}>
-            <motion.div
-              key={friendList}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="friends"
-            ></motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Item Closet */}
-        <AnimatePresence>
-          {showPage === 'closet' && (
-            <motion.div
-              id="closets"
-              initial={{ x: -350 }}
-              animate={{ x: 0 }}
-              exit={{ x: -350 }}
-            >
-              {newCloset === undefined ? (
-                <div className="closet add" onClick={() => newClosetSet('')}>
-                  <div className="name">+</div>
-                </div>
-              ) : (
-                <div className="closet text">
-                  <input
-                    id="textfield"
-                    ref={closetInput}
-                    value={newCloset}
-                    onChange={(e) => newClosetSet(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleNewCloset();
-                      }
-                    }}
-                    onFocus={handleFocus}
-                  ></input>
-                </div>
-              )}
-
-              {newCloset !== undefined && (
-                <div className="closet submit" onClick={handleNewCloset}>
-                  Add
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        {/* Friend Feedback */}
-        <AnimatePresence>
-          {friendDetail && (
-            <motion.div
-              id="feedback"
-              key={friendDetail.id}
-              initial={{ y: 125, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 125, opacity: 0 }}
-            >
-              <IconButton id="close" onClick={closeFriendDetails}>
-                <CgCloseR />
+              <div className="text">
+                {showPage === 'feedback'
+                  ? 'Feedback'
+                  : showPage === 'info'
+                  ? 'Info'
+                  : 'Closets'}
+              </div>
+              <IconButton onClick={handleCopyLink} className="icon">
+                <FaCopy />
               </IconButton>
-              {showFeedback && (
-                <div className="content feedback">
-                  <div className="emote">
-                    {friendDetail.review === 'meh' && <AiOutlineMeh id="meh" />}
-                    {friendDetail.review === 'good' && (
-                      <BiHappyHeartEyes id="good" />
-                    )}
-                    {friendDetail.review === 'bad' && <BiSad id="bad" />}
-                  </div>
-                  <div className="text">{friendDetail.feedback}</div>
-                </div>
-              )}
-              {showWaiting && (
-                <div className="content waiting">
-                  <div>
-                    <RiMailSendLine />
-                  </div>
-                  <div>
-                    request sent{' '}
-                    <Moment fromNow date={friendDetail.time_sent} />
-                  </div>
-                </div>
-              )}
-              {showRequestFeedback && (
-                <div className="content request">
-                  {feedbackSuccess ? (
-                    <div>Successfully Requested!</div>
-                  ) : (
-                    <Button
-                      id="request"
-                      onClick={() => handleFeedbackRequest(friendDetail.id)}
-                      endIcon={<BiSend />}
+            </div>
+            <div id="friends">
+              <div className="friends-nav">
+                {friendList > 0 && (
+                  <IconButton
+                    onClick={handlePrevFriendsRow}
+                    id="prev"
+                    size="small"
+                  >
+                    <MdNavigateBefore />
+                  </IconButton>
+                )}
+              </div>
+
+              <AnimatePresence custom={direction} initial={false}>
+                <motion.div
+                  key={friendList}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="friends"
+                ></motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Item Closet */}
+            <AnimatePresence>
+              {showPage === 'closet' && (
+                <motion.div
+                  id="closets"
+                  initial={{ x: -350 }}
+                  animate={{ x: 0 }}
+                  exit={{ x: -350 }}
+                >
+                  {newCloset === undefined ? (
+                    <div
+                      className="closet add"
+                      onClick={() => newClosetSet('')}
                     >
-                      Request Feedback from {friendDetail.name}
-                    </Button>
+                      <div className="name">+</div>
+                    </div>
+                  ) : (
+                    <div className="closet text">
+                      <input
+                        id="textfield"
+                        ref={closetInput}
+                        value={newCloset}
+                        onChange={(e) => newClosetSet(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleNewCloset();
+                          }
+                        }}
+                        onFocus={handleFocus}
+                      ></input>
+                    </div>
                   )}
-                </div>
+
+                  {newCloset !== undefined && (
+                    <div className="closet submit" onClick={handleNewCloset}>
+                      Add
+                    </div>
+                  )}
+                </motion.div>
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+            </AnimatePresence>
+            {/* Friend Feedback */}
+            <AnimatePresence>
+              {friendDetail && (
+                <motion.div
+                  id="feedback"
+                  key={friendDetail.id}
+                  initial={{ y: 125, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 125, opacity: 0 }}
+                >
+                  <IconButton id="close" onClick={closeFriendDetails}>
+                    <CgCloseR />
+                  </IconButton>
+                  {showFeedback && (
+                    <div className="content feedback">
+                      <div className="emote">
+                        {friendDetail.review === 'meh' && (
+                          <AiOutlineMeh id="meh" />
+                        )}
+                        {friendDetail.review === 'good' && (
+                          <BiHappyHeartEyes id="good" />
+                        )}
+                        {friendDetail.review === 'bad' && <BiSad id="bad" />}
+                      </div>
+                      <div className="text">{friendDetail.feedback}</div>
+                    </div>
+                  )}
+                  {showWaiting && (
+                    <div className="content waiting">
+                      <div>
+                        <RiMailSendLine />
+                      </div>
+                      <div>
+                        request sent{' '}
+                        <Moment fromNow date={friendDetail.time_sent} />
+                      </div>
+                    </div>
+                  )}
+                  {showRequestFeedback && (
+                    <div className="content request">
+                      {feedbackSuccess ? (
+                        <div>Successfully Requested!</div>
+                      ) : (
+                        <Button
+                          id="request"
+                          onClick={() => handleFeedbackRequest(friendDetail.id)}
+                          endIcon={<BiSend />}
+                        >
+                          Request Feedback from {friendDetail.name}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </>
+      ) : (
+        <div id="TutorialCurrent">
+          <h2>Welcome to Rex!</h2>
+          <img src={Image} alt="icon" id="icon" />
+          <div id="text">Save products from any website</div>
+          <div id="text2">
+            Just click the{' '}
+            <img
+              src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-cart-nocheck.png"
+              alt="cart"
+              id="cart"
+            />
+            on the right!
+          </div>
+        </div>
+      )}
     </div>
   );
 }

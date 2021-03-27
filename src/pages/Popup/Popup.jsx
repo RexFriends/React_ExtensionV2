@@ -81,7 +81,7 @@ const Popup = () => {
         'notifications',
       ],
       (res) => {
-        console.log(res.user);
+        // console.log(res.user);
         currentItemDataSet(res.current_item);
         friendsDataSet(res.friends);
         closetDataSet(res.closet);

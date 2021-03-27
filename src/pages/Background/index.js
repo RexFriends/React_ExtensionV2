@@ -44,21 +44,30 @@ chrome.storage.onChanged.addListener((response) => {
     );
     // makes a fetch call to the for extension dashboard on login
 
-    if (response.uId.oldValue === 'empty') {
-      let startTime = new Date();
-
+    if (
+      response.uId.oldValue === 'empty' &&
+      response.uId.hasOwnProperty('newValue')
+    ) {
       console.log('making fetch request for dashboard load', response.uId);
+
       fetch(APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
-          let endTime = new Date();
-          console.log('extension_dashboard', json);
-          console.log(
-            'time passed for initial load:',
-            Math.round((endTime - startTime) / 1000),
-            'seconds'
-          );
-          chrome.storage.local.set(json);
+          if (!json.hasOwnProperty('Unauthorized Access')) {
+            chrome.storage.local.set(json);
+          } else {
+            // This means the user account is new & we have to recall this route after user is created
+            const runInitialUserFetch = () => {
+              fetch(
+                APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue
+              )
+                .then((res) => res.json())
+                .then((json) => {
+                  chrome.storage.local.set(json);
+                });
+            };
+            setTimeout(() => runInitialUserFetch(), 1000);
+          }
         });
     }
   }
@@ -201,13 +210,18 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   }
   //
   if (msg.action === 'get_currentItem') {
-    // console.log('update current item', msg);
-    fetch(APIURL + `/api/get_item/${msg.currentItemId}?uid=` + msg.uid)
-      .then((res) => res.json())
-      .then((json) => {
-        let current_item = json.current_item;
-        chrome.storage.local.set({ current_item });
-      });
+    console.log('update current item', msg);
+    if (msg.currentItemId !== undefined) {
+      fetch(APIURL + `/api/get_item/${msg.currentItemId}?uid=` + msg.uid)
+        .then((res) => res.json())
+        .then((json) => {
+          let current_item = json.current_item;
+          chrome.storage.local.set({ current_item });
+        });
+    } else {
+      console.log('Not current item');
+    }
+
     // .catch((err) => console.log('this is an error', err));
   }
   //
