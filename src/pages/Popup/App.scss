@@ -248,6 +248,34 @@ html {
     padding: 0px 5px;
     font-size: 30px;
   }
+  #content {
+    border: solid red 2px;
+    flex-grow: 1;
+    margin: 0px 10px 10px 10px;
+    overflow: scroll;
+    #notif {
+      border: solid blue 2px;
+      height: 70px;
+      margin-bottom: 5px;
+    }
+  }
+  #no-notif {
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    // border: solid red 2px;
+    padding-bottom: 50px;
+    #text {
+      font-size: 24px;
+    }
+    #icon {
+      width: 250px;
+      height: 250px;
+      object-fit: contain;
+    }
+  }
 }
 
 .Header {

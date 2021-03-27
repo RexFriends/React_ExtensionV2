@@ -75,6 +75,13 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   //* console logs in background js
   if (msg.action === 'log') {
     console.log(msg.msg, msg.log);
+    // ! Bellow is the payload & function used for this debugging tool
+    // let payload = {
+    //   action: 'log',
+    //   log: response,
+    //   msg: 'Got here',
+    // };
+    // chrome.runtime.sendMessage(payload);
   }
 
   //* Creates new account / logs user in if using Google/FB OAuth
@@ -403,6 +410,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
         fetch(APIURL + '/api/get_notif?uid=' + res.uId)
           .then((res) => res.json())
           .then((json) => {
+            console.log('succesfully fetched notifications', json);
             let notifications = json.notifications;
             chrome.storage.local.set({ notifications });
           })
