@@ -122,8 +122,11 @@ const Popup = () => {
       userSet(response.user.newValue);
     }
     if (response.notifications) {
-      notificationDataSet(response.notifications.newValue);
-      notificationCountSet(res.notifications.newValue.amount);
+      console.log(response.notifications);
+      if (response.notifications.hasOwnProperty('newValue')) {
+        notificationDataSet(response.notifications.newValue);
+        notificationCountSet(res.notifications.newValue.amount);
+      }
     }
   });
 

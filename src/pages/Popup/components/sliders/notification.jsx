@@ -15,6 +15,7 @@ function Notification({ showNotificationSet }) {
       url: 'https://app.rexfriends.com/',
     });
   };
+
   return (
     <motion.div
       className="Notification"

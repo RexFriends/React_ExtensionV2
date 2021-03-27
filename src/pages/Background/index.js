@@ -36,20 +36,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 // This listens to state changes and can trigger functions here
 chrome.storage.onChanged.addListener((response) => {
   if (response.uId) {
-    chrome.tabs.query(
-      { active: true, currentWindow: true },
-      function (arrayOfTabs) {
-        chrome.tabs.reload(arrayOfTabs[0].id);
-      }
-    );
-    // makes a fetch call to the for extension dashboard on login
+    console.log('UID Changed', response.uId);
+    setTimeout(() => chrome.tabs.reload(), 500);
 
     if (
       response.uId.oldValue === 'empty' &&
       response.uId.hasOwnProperty('newValue')
     ) {
       console.log('making fetch request for dashboard load', response.uId);
-
       fetch(APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
@@ -64,6 +58,12 @@ chrome.storage.onChanged.addListener((response) => {
                 .then((res) => res.json())
                 .then((json) => {
                   chrome.storage.local.set(json);
+                });
+              fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
+                .then((res) => res.json())
+                .then((json) => {
+                  let notifications = json.notifications;
+                  chrome.storage.local.set({ notifications });
                 });
             };
             setTimeout(() => runInitialUserFetch(), 1000);
@@ -212,10 +212,13 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   if (msg.action === 'get_currentItem') {
     console.log('update current item', msg);
     if (msg.currentItemId !== undefined) {
-      fetch(APIURL + `/api/get_item/${msg.currentItemId}?uid=` + msg.uid)
+      fetch(
+        APIURL + `/api/product?uid=${msg.uid}&product_id=${msg.currentItemId}`
+      )
         .then((res) => res.json())
         .then((json) => {
-          let current_item = json.current_item;
+          console.log(json);
+          let current_item = json.product;
           chrome.storage.local.set({ current_item });
         });
     } else {
@@ -392,12 +395,14 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   }
   if (msg.action === 'update notification') {
     chrome.storage.local.get('uId', (res) => {
-      fetch(APIURL + '/api/get_notif?uid=' + res.uId)
-        .then((res) => res.json())
-        .then((json) => {
-          let notifications = json.notifications;
-          chrome.storage.local.set({ notifications });
-        });
+      if (res.uId !== 'empty') {
+        fetch(APIURL + '/api/get_notif?uid=' + res.uId)
+          .then((res) => res.json())
+          .then((json) => {
+            let notifications = json.notifications;
+            chrome.storage.local.set({ notifications });
+          });
+      }
     });
   }
 });

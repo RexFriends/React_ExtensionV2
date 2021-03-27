@@ -133,6 +133,7 @@ function ClosetInjection({
               className={classes.root}
               color="default"
               checked={currentItemClosets.includes(closet.id)}
+              disabled={closet.name === 'Saved Products'}
               checkedIcon={
                 <span className={clsx(classes.icon, classes.checkedIcon)} />
               }

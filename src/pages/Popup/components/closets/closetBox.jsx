@@ -5,6 +5,7 @@ function ClosetBox({ closetData, closetPreview }) {
 
   useEffect(() => {
     let arr = closetPreview.items.slice(0, 4).map((item) => {
+      console.log(item);
       if (item.isWebscraped) {
         return item.images;
       } else {
