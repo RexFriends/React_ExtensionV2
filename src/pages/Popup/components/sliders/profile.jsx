@@ -65,16 +65,15 @@ function Profile({ showProfileSet }) {
       transition={{ spring }}
     >
       <div id="top">
+        <IconButton onClick={OpenOptions}>
+          <AiTwotoneSetting />
+        </IconButton>
         <IconButton
           onClick={() => {
             showProfileSet(false);
           }}
         >
           <AiOutlineClose />
-        </IconButton>
-        <div>Profile</div>
-        <IconButton onClick={OpenOptions}>
-          <AiTwotoneSetting />
         </IconButton>
       </div>
       <div id="content">

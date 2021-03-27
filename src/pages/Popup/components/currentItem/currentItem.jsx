@@ -474,7 +474,7 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
           <img src={Image} alt="icon" id="icon" />
           <div id="text">Save products from any website</div>
           <div id="text2">
-            Just click the{' '}
+            Just click the
             <img
               src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-cart-nocheck.png"
               alt="cart"

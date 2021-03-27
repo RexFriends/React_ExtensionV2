@@ -25,16 +25,16 @@ function Notification({ showNotificationSet }) {
       transition={{ spring }}
     >
       <div id="top">
-        <IconButton onClick={openRexPage}>
-          <FiHome />
-        </IconButton>
-        <div>in dev</div>
         <IconButton
           onClick={() => {
             showNotificationSet(false);
           }}
         >
           <AiOutlineClose />
+        </IconButton>
+
+        <IconButton onClick={openRexPage}>
+          <FiHome />
         </IconButton>
       </div>
     </motion.div>
