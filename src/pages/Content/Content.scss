@@ -189,8 +189,8 @@
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
         margin-right: 7px;
-        max-height: 300px;
-        width: 190px;
+        max-height: 450px;
+        width: 300px;
         overflow-y: hidden;
         overflow-x: hidden;
         #rex-top {
@@ -238,20 +238,21 @@
           #searchbar {
             display: flex;
             flex-direction: row;
-
             height: 35px;
-
-            #input {
-              border-radius: 3px;
-              margin: 0px 5px;
-              width: 140px;
-            }
-            #searchbutton {
-              width: 30px;
-              height: 30px;
-              margin-left: -2px;
-              #svg {
-                font-size: 16px;
+            #motion {
+              #input {
+                height: 28px;
+                border-radius: 3px;
+                margin: 0px 5px;
+                width: 140px;
+              }
+              #searchbutton {
+                width: 30px;
+                height: 30px;
+                margin-left: -2px;
+                #svg {
+                  font-size: 16px;
+                }
               }
             }
           }
@@ -304,8 +305,8 @@
         position: absolute;
         z-index: 9999;
         width: 100px;
-        height: 20px;
-        right: 280px;
+        height: 25px;
+        right: 85px;
         top: 51px;
         padding: 0px 4px;
         text-align: center;

@@ -34,20 +34,18 @@ function Header({
           <div className="count">{notificationCount}</div>
         )}
       </div>
-      <div className="center"></div>
-      {user && (
-        <div className="nametag">
-          {user.first_name} {user.last_name}
-        </div>
-      )}
-      <img
-        src={data.propic}
-        className="profile"
-        onClick={() => {
-          showNotificationSet(false);
-          showProfileSet(true);
-        }}
-      />
+
+      <div id="user">
+        {user && <div className="nametag">{user.username}</div>}
+        <img
+          src={data.propic}
+          className="profile"
+          onClick={() => {
+            showNotificationSet(false);
+            showProfileSet(true);
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -285,8 +285,8 @@ html {
   height: 60px;
   background-color: #f7f8f8;
   display: flex;
-  justify-content: flex-end;
-  // justify-content: space-between;
+  // justify-content: flex-end;
+  justify-content: space-between;
 
   .notif {
     margin-top: 5px;
@@ -325,7 +325,7 @@ html {
     }
   }
   .center {
-    width: 165px;
+    width: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -333,27 +333,32 @@ html {
     height: 50px;
   }
 
-  .nametag {
-    height: 56px;
-    margin-top: 5px;
-    margin-right: 5px;
-    max-width: 65px;
-    overflow: auto;
+  #user {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-size: 12px;
-  }
-  .profile {
-    width: 60px;
-    margin-right: 10px;
-    border-radius: 30px;
-    height: 50px;
-    width: 50px;
-    margin-top: 10px;
-    transition: opacity 0.2s;
-    &:hover {
-      opacity: 0.75;
+    .nametag {
+      // border: solid red 2px;
+      height: 56px;
+      margin-top: 5px;
+      margin-right: 5px;
+      max-width: 350px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .profile {
+      // border: solid red 2px;
+      width: 60px;
+      margin-right: 10px;
+      border-radius: 30px;
+      height: 50px;
+      width: 50px;
+      margin-top: 10px;
+      transition: opacity 0.2s;
+      &:hover {
+        opacity: 0.75;
+      }
     }
   }
 }

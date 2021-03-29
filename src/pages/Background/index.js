@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener((response) => {
   //* redirect user to website on install
   chrome.tabs.create({
     active: true,
-    url: 'https://rexfriends.com',
+    url: 'https://app.rexfriends.com',
   });
   //* these clears & sets default storage on install
   chrome.storage.sync.clear();
@@ -44,6 +44,7 @@ chrome.storage.onChanged.addListener((response) => {
       fetch(APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
+          console.log('extension_dashboard 1st try', json);
           //* This means the user account is new & we have to recall this route after the user is created because the new user data needs to be constructed in the db
           if (json.hasOwnProperty('Unauthorized Access')) {
             const runInitialUserFetch = () => {
@@ -53,7 +54,8 @@ chrome.storage.onChanged.addListener((response) => {
                 .then((res) => res.json())
                 .then((json) => {
                   chrome.storage.local.set(json);
-                });
+                })
+                .catch(() => console.log('extension-dashboard error'));
               fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
                 .then((res) => res.json())
                 .then((json) => {
@@ -63,6 +65,13 @@ chrome.storage.onChanged.addListener((response) => {
             };
             setTimeout(() => runInitialUserFetch(), 1000);
             return;
+          } else {
+            fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
+              .then((res) => res.json())
+              .then((json) => {
+                let notifications = json.notifications;
+                chrome.storage.local.set({ notifications });
+              });
           }
           chrome.storage.local.set(json);
         });
@@ -274,9 +283,10 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             .then((res) => res.json())
             .then((json) => {
               let friends = json.contacts;
+              console.log(json);
               let feedbackNotif = {
                 variant: 'good',
-                message: 'Success!!',
+                message: 'Valid Number',
               };
               chrome.storage.local.set({ friends });
               chrome.storage.local.set({ feedbackNotif });

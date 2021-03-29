@@ -32,7 +32,7 @@ const Popup = () => {
   const [friendsData, friendsDataSet] = useState(undefined);
   const [currentItemData, currentItemDataSet] = useState(undefined);
   const [notificationData, notificationDataSet] = useState(undefined);
-  const [notificationCount, notificationCountSet] = useState(undefined);
+  const [notificationCount, notificationCountSet] = useState(0);
   const [closetData, closetDataSet] = useState([]);
   const [closetPreviewData, closetPreviewDataSet] = useState([]);
   const [user, userSet] = useState(undefined);
