@@ -319,7 +319,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   //* Sends a rex to a friend
   if (msg.action === 'send rex') {
     let payload = {
-      contact_id: msg.contact_id,
+      user_requesting_id: msg.user_requesting_id,
       product_id: msg.product_id,
     };
     fetch(APIURL + '/api/send_rex?uid=' + msg.uid, {
@@ -347,7 +347,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           chrome.storage.local.set({ feedbackNotif });
         }
       })
-      .catch(() => console.log('send-rex error'));
+      .catch(() => console.log('send-rex error', payload));
   }
   //* Change nickname of friend
   if (msg.action === 'change nickname') {
@@ -427,5 +427,15 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           .catch(() => console.log('update-notification error'));
       }
     });
+  }
+  if (msg.action === 'friend search') {
+    fetch(APIURL + '/api/get_users?uid=' + msg.uid + '&text=' + msg.text)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log('succesfully fetched users', json);
+
+        // chrome.storage.local.set({userSearch})
+      })
+      .catch(() => console.log('get-user error'));
   }
 });

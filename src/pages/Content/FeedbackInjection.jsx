@@ -20,13 +20,33 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   const [editValue, editValueSet] = useState('');
   const [tempNumberToMatch, tempNumberToMatchSet] = useState(undefined);
   const [searchBar, searchBarSet] = useState('');
+  const [searchResults, searchResultsSet] = useState(undefined);
+
   useEffect(() => {
     chrome.storage.local.get('friends', (res) => {
       friendsSet(res.friends);
       // console.log('fetch friends', res.friends);
     });
+
     return () => {};
   }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchBar.length >= 3) {
+        console.log(
+          `I can see you're not typing. I can use "${searchBar}" now!`
+        );
+        let payload = {
+          action: 'friend search',
+          text: searchBar,
+          uid: uid,
+        };
+        chrome.runtime.sendMessage(payload);
+      }
+    }, 2000);
+    return () => clearTimeout(timeoutId);
+  }, [searchBar]);
 
   chrome.storage.onChanged.addListener((res) => {
     if (res.friends) {
@@ -34,7 +54,6 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
       friendsSet(res.friends.newValue);
     }
     if (res.feedbackNotif) {
-      // console.log('feedback notif update', res.feedbackNotif);
       if (res.feedbackNotif.newValue.message !== 'null') {
         if (res.feedbackNotif.newValue.message === 'Valid Number') {
           tempNumberToMatchSet(inputField);
@@ -42,11 +61,19 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
           showAddFriendNameSet(true);
         }
         feedbackNotifSet(res.feedbackNotif.newValue);
-        setTimeout(() => feedbackNotifSet(undefined), 2000);
-        setTimeout(() => {
-          let feedbackNotif = { message: null };
-          chrome.storage.local.set({ feedbackNotif });
-        }, 2000);
+        // setTimeout(() => feedbackNotifSet(undefined), 2000);
+        // setTimeout(() => {
+        //   let feedbackNotif = { message: null };
+        //   chrome.storage.local.set({ feedbackNotif });
+        // }, 2000);
+      }
+    }
+    // ! Handles showing the search results
+    if (res.userSearch) {
+      if (res.userSearch.hasOwnProperty('newValue')) {
+        searchResultsSet(res.userSearch.newValue);
+      } else {
+        searchResultsSet(undefined);
       }
     }
   });
@@ -70,28 +97,26 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     setTimeout(() => showCopiedLinkSet(false), 5000);
   };
 
-  const handleSendRequestClick = (id) => {
-    let payload = {
-      action: 'send rex',
-      contact_id: id,
-      uid: uid,
-      product_id: currentItem.id,
-    };
-    chrome.runtime.sendMessage(payload);
+  const handleSendRequestClick = (friend) => {
+    console.log(friend);
+    if (friend.isUser === false) {
+      let payload = {
+        action: 'send rex',
+        user_requesting_id: null,
+        uid: uid,
+        product_id: currentItem.id,
+      };
+      chrome.runtime.sendMessage(payload);
+    } else {
+      let payload = {
+        action: 'send rex',
+        user_requesting_id: friend.id,
+        uid: uid,
+        product_id: currentItem.id,
+      };
+      chrome.runtime.sendMessage(payload);
+    }
   };
-
-  // const handleSearch = () => {
-  //   if (inputField !== '') {
-  //     let payload = {
-  //       action: 'send friend request',
-  //       username: inputField,
-  //       uid: uid,
-  //     };
-  //     chrome.runtime.sendMessage(payload);
-  //   }
-  //   inputFieldSet('');
-  //   showSearchFriendSet(false);
-  // };
 
   const handleAdd = () => {
     if (inputField !== '' && inputField !== '0') {
@@ -150,6 +175,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     editValueSet('');
     editFriendShowSet(false);
   };
+
   return (
     <>
       <motion.div
@@ -177,102 +203,85 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
           </AnimatePresence>
         </div>
         <div id="rex-content">
-          {
-            // showSearchFriend ? (
-            //   <div id="searchbar">
-            //     <input
-            //       id="input"
-            //       placeholder="Search for a Friend"
-            //       autoComplete="off"
-            //       maxLength="15"
-            //       value={inputField}
-            //       onChange={(e) => inputFieldSet(e.target.value)}
-            //     />
-            //     <IconButton onClick={handleSearch} size="small" id="searchbutton">
-            //       <AiOutlineSearch id="svg" />
-            //     </IconButton>
-            //   </div>
-            // ) :
-            showAddFriend ? (
-              <div id="searchbar">
-                <AnimatePresence>
-                  {!showAddFriendName ? (
-                    <motion.div
-                      key="1"
-                      id="motion"
-                      initial={{ x: 300 }}
-                      animate={{ x: 0 }}
-                      exit={{ x: -300 }}
-                    >
-                      <input
-                        type="tel"
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                        required
-                        id="input"
-                        placeholder="Add Phone Number"
-                        autoComplete="off"
-                        maxLength="15"
-                        value={inputField}
-                        onChange={(e) => inputFieldSet(e.target.value)}
-                      />
-                      <IconButton
-                        onClick={handleAdd}
-                        size="small"
-                        id="searchbutton"
-                      >
-                        <GrLinkNext id="svg" />
-                      </IconButton>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="2"
-                      id="motion"
-                      initial={{ x: 300 }}
-                      animate={{ x: 0 }}
-                      exit={{ x: -300 }}
-                      transition={{ delay: 1 }}
-                    >
-                      <input
-                        type="text"
-                        required
-                        id="input"
-                        placeholder="Add A Name"
-                        autoComplete="off"
-                        maxLength="15"
-                        value={inputField}
-                        onChange={(e) => inputFieldSet(e.target.value)}
-                      />
-                      <IconButton
-                        onClick={handleAddName}
-                        size="small"
-                        id="searchbutton"
-                      >
-                        <GrLinkNext id="svg" />
-                      </IconButton>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              showAddFriend === false && (
-                <div id="addfriend">
-                  <input
-                    type="text"
-                    placeholder="Search Friends"
-                    value={searchBar}
-                    onChange={(e) => searchBarSet(e.target.value)}
-                  />
-                  <Button
-                    onClick={handleAddFriendShow}
-                    startIcon={<AiOutlineUserAdd id="svg" />}
-                    size="small"
+          {showAddFriend ? (
+            <div id="searchbar">
+              <AnimatePresence>
+                {!showAddFriendName ? (
+                  <motion.div
+                    key="1"
+                    id="motion"
+                    initial={{ x: 300 }}
+                    animate={{ x: 0 }}
+                    exit={{ x: -300 }}
                   >
-                    Invite
-                  </Button>
-                </div>
-              )
+                    <input
+                      type="tel"
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      required
+                      id="input"
+                      placeholder="Add Phone Number"
+                      autoComplete="off"
+                      maxLength="15"
+                      value={inputField}
+                      onChange={(e) => inputFieldSet(e.target.value)}
+                    />
+                    <IconButton
+                      onClick={handleAdd}
+                      size="small"
+                      id="searchbutton"
+                    >
+                      <GrLinkNext id="svg" />
+                    </IconButton>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="2"
+                    id="motion"
+                    initial={{ x: 300 }}
+                    animate={{ x: 0 }}
+                    exit={{ x: -300 }}
+                    transition={{ delay: 1 }}
+                  >
+                    <input
+                      type="text"
+                      required
+                      id="input"
+                      placeholder="Add A Name"
+                      autoComplete="off"
+                      maxLength="15"
+                      value={inputField}
+                      onChange={(e) => inputFieldSet(e.target.value)}
+                    />
+                    <IconButton
+                      onClick={handleAddName}
+                      size="small"
+                      id="searchbutton"
+                    >
+                      <GrLinkNext id="svg" />
+                    </IconButton>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            showAddFriend === false && (
+              <div id="addfriend">
+                <input
+                  type="text"
+                  placeholder="Search Friends"
+                  value={searchBar}
+                  onChange={(e) => searchBarSet(e.target.value)}
+                />
+                <Button
+                  onClick={handleAddFriendShow}
+                  startIcon={<AiOutlineUserAdd id="svg" />}
+                  size="small"
+                >
+                  Invite
+                </Button>
+              </div>
             )
-          }
+          )}
 
           <div id="friendList">
             {friends &&
@@ -327,7 +336,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                           </IconButton>
                           <IconButton
                             size="small"
-                            onClick={() => handleSendRequestClick(friend.id)}
+                            onClick={() => handleSendRequestClick(friend)}
                           >
                             <FiSend />
                           </IconButton>
@@ -336,6 +345,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                     </div>
                   </div>
                 ))}
+            {searchResults && <div>search results</div>}
           </div>
         </div>
       </motion.div>
