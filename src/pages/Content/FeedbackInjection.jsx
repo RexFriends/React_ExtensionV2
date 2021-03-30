@@ -7,6 +7,8 @@ import { AiOutlineUserAdd, AiOutlineSearch } from 'react-icons/ai';
 import { FiSend, FiEdit, FiSave } from 'react-icons/fi';
 import { IoMdClose } from 'react-icons/io';
 import { GrLinkNext } from 'react-icons/gr';
+import { FiSearch } from 'react-icons/fi';
+import { FaUserFriends } from 'react-icons/fa';
 
 function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   const [friends, friendsSet] = useState([]);
@@ -21,10 +23,12 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   const [tempNumberToMatch, tempNumberToMatchSet] = useState(undefined);
   const [searchBar, searchBarSet] = useState('');
   const [searchResults, searchResultsSet] = useState(undefined);
+  const [isSearching, isSearchingSet] = useState(false);
 
   useEffect(() => {
     chrome.storage.local.get('friends', (res) => {
       friendsSet(res.friends);
+      console.log(res.friends);
       // console.log('fetch friends', res.friends);
     });
 
@@ -32,8 +36,11 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   }, []);
 
   useEffect(() => {
+    if (searchBar < 1) {
+      searchResultsSet(undefined);
+    }
     const timeoutId = setTimeout(() => {
-      if (searchBar.length >= 3) {
+      if (searchBar.length >= 1) {
         console.log(
           `I can see you're not typing. I can use "${searchBar}" now!`
         );
@@ -44,7 +51,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
         };
         chrome.runtime.sendMessage(payload);
       }
-    }, 2000);
+    }, 500);
     return () => clearTimeout(timeoutId);
   }, [searchBar]);
 
@@ -61,15 +68,16 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
           showAddFriendNameSet(true);
         }
         feedbackNotifSet(res.feedbackNotif.newValue);
-        // setTimeout(() => feedbackNotifSet(undefined), 2000);
-        // setTimeout(() => {
-        //   let feedbackNotif = { message: null };
-        //   chrome.storage.local.set({ feedbackNotif });
-        // }, 2000);
+        setTimeout(() => feedbackNotifSet(undefined), 2000);
+        setTimeout(() => {
+          let feedbackNotif = { message: null };
+          chrome.storage.local.set({ feedbackNotif });
+        }, 1000);
       }
     }
     // ! Handles showing the search results
     if (res.userSearch) {
+      console.log(res.userSearch);
       if (res.userSearch.hasOwnProperty('newValue')) {
         searchResultsSet(res.userSearch.newValue);
       } else {
@@ -132,9 +140,10 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   const handleAddName = () => {
     chrome.storage.local.get({ friends }, (res) => {
       let friend = res.friends.find(
-        (friend) => friend.phonenumber === tempNumberToMatch
+        (friend) => friend.phone_number === tempNumberToMatch
       );
       if (inputField !== '') {
+        console.log(friend);
         let payload = {
           action: 'change nickname',
           new_nickname: inputField,
@@ -142,19 +151,11 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
           uid: uid,
         };
         chrome.runtime.sendMessage(payload);
+        inputFieldSet('');
+        showAddFriendNameSet(false);
+        showAddFriendSet(false);
       }
     });
-
-    inputFieldSet('');
-    showAddFriendNameSet(false);
-    showAddFriendSet(false);
-  };
-
-  const handleEditFriend = (id) => {
-    if (editFriendShow !== false && editValue !== '') {
-      handleSaveFriend();
-    }
-    editFriendShowSet(id);
   };
 
   const handleSaveFriend = () => {
@@ -176,12 +177,17 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     editFriendShowSet(false);
   };
 
+  const handleCancel = () => {
+    inputFieldSet('');
+    showAddFriendSet(false);
+  };
+
   return (
     <>
       <motion.div
         id="sharebox"
         initial={{ height: 0, opacity: 0 }}
-        animate={{ height: 300, opacity: 1 }}
+        animate={{ height: 450, opacity: 1 }}
         exit={{ height: 0, opacity: 0 }}
       >
         <div id="rex-top">
@@ -232,6 +238,9 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                     >
                       <GrLinkNext id="svg" />
                     </IconButton>
+                    <IconButton onClick={handleCancel} size="small">
+                      <IoMdClose />
+                    </IconButton>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -249,6 +258,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                       placeholder="Add A Name"
                       autoComplete="off"
                       maxLength="15"
+                      label="required"
                       value={inputField}
                       onChange={(e) => inputFieldSet(e.target.value)}
                     />
@@ -265,87 +275,118 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
             </div>
           ) : (
             showAddFriend === false && (
-              <div id="addfriend">
-                <input
-                  type="text"
-                  placeholder="Search Friends"
-                  value={searchBar}
-                  onChange={(e) => searchBarSet(e.target.value)}
-                />
-                <Button
-                  onClick={handleAddFriendShow}
-                  startIcon={<AiOutlineUserAdd id="svg" />}
-                  size="small"
-                >
-                  Invite
-                </Button>
+              <div id="searchbar">
+                <div id="motion" key="3">
+                  <input
+                    type="text"
+                    id="input"
+                    autoComplete="off"
+                    placeholder="Search Friends"
+                    value={searchBar}
+                    onChange={(e) => searchBarSet(e.target.value)}
+                  />
+                  <Button
+                    onClick={handleAddFriendShow}
+                    startIcon={<AiOutlineUserAdd id="svg" />}
+                    size="small"
+                  >
+                    Invite
+                  </Button>
+                </div>
               </div>
             )
           )}
 
           <div id="friendList">
-            {friends &&
-              friends
-                .slice(0)
-                .reverse()
-                .filter((friend) => {
-                  if (friend.name !== null) {
-                    return friend.name
-                      .toLowerCase()
-                      .includes(searchBar.toLowerCase());
-                  } else {
-                    return false;
-                  }
-                })
-                .map((friend, i) => (
-                  <div key={i} id="friend">
-                    <div id="name">
-                      {editFriendShow === friend.id ? (
-                        <input
-                          id="input"
-                          value={editValue}
-                          onChange={(e) => editValueSet(e.target.value)}
-                          type="text"
-                          autoComplete="off"
-                          maxLength="12"
-                          placeholder="Add Nickname"
-                        ></input>
-                      ) : friend.name ? (
-                        friend.name
-                      ) : (
-                        friend.phonenumber
-                      )}
-                    </div>
-                    <div id="icons">
-                      {editFriendShow === friend.id ? (
-                        <>
-                          <IconButton size="small" onClick={handleSaveFriend}>
-                            <FiSave />
-                          </IconButton>
-                          <IconButton size="small" onClick={handleCancelEdit}>
-                            <IoMdClose />
-                          </IconButton>
-                        </>
-                      ) : (
-                        <>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEditFriend(friend.id)}
-                          >
-                            <FiEdit />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleSendRequestClick(friend)}
-                          >
-                            <FiSend />
-                          </IconButton>
-                        </>
-                      )}
-                    </div>
+            {!searchResults && friends && (
+              <>
+                <div id="query">
+                  Friends
+                  <div id="icons">
+                    <FaUserFriends />
                   </div>
-                ))}
-            {searchResults && <div>search results</div>}
+                </div>
+                {friends
+                  .slice(0)
+                  .reverse()
+                  .filter((friend) => {
+                    if (friend.name !== null) {
+                      return friend.name
+                        .toLowerCase()
+                        .includes(searchBar.toLowerCase());
+                    } else {
+                      return false;
+                    }
+                  })
+                  .map((friend, i) => (
+                    <div key={i} id="friend">
+                      <img
+                        id="proimg"
+                        src={friend.profile_image}
+                        alt="user-propic"
+                      ></img>
+                      <div id="name">
+                        {friend.name ? friend.name : friend.phonenumber}
+                      </div>
+                      <div id="icons">
+                        {editFriendShow === friend.id ? (
+                          <>
+                            <IconButton size="small" onClick={handleSaveFriend}>
+                              <FiSave />
+                            </IconButton>
+                            <IconButton size="small" onClick={handleCancelEdit}>
+                              <IoMdClose />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleSendRequestClick(friend)}
+                            >
+                              <FiSend />
+                            </IconButton>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </>
+            )}
+            {searchResults && (
+              <>
+                <div id="query">
+                  search results
+                  <div id="icons">
+                    <FiSearch />
+                  </div>
+                </div>
+                {searchResults.length > 0 ? (
+                  searchResults.map((user, i) => (
+                    <div key={i} id="friend">
+                      <img
+                        id="proimg"
+                        src={user.profile_image}
+                        alt="user-propic"
+                      ></img>
+                      <div id="name">
+                        {user.username ? user.username : user.name}
+                      </div>
+                      <div id="icons">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleSendRequestClick(user)}
+                        >
+                          <FiSend />
+                        </IconButton>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div id="no-users">No Users Found</div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </motion.div>

@@ -16,7 +16,7 @@ async function isSiteBlacklisted(url) {
   const json = await response.json();
   const index = getPosition(url, '/', 3) + 5;
   console.log(index);
-  for (var i = 0; i < json.list.length; i++) {
+  for (var i = 0; i < 3; i++) {
     if (url.substring(0, index).includes(json.list[i])) {
       return false;
     }

@@ -6,7 +6,13 @@ import Switch from '@material-ui/core/Switch';
 import firebase from 'firebase';
 import IconButton from '@material-ui/core/IconButton';
 require('firebase/auth');
-function Profile({ showProfileSet }) {
+
+const data = {
+  propic:
+    'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+};
+
+function Profile({ showProfileSet, user }) {
   const [injection, injectionSet] = useState(true);
   const [showWarning, showWarningSet] = useState(false);
   useEffect(() => {
@@ -78,7 +84,7 @@ function Profile({ showProfileSet }) {
       </div>
       <div id="content">
         <img
-          src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+          src={user?.profile_image ? user.profile_image : data.propic}
           id="propic"
           alt="propic"
         />

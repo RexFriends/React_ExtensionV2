@@ -5,13 +5,13 @@ function ClosetBox({ closetData, closetPreview }) {
 
   useEffect(() => {
     let arr = closetPreview.items.slice(0, 4).map((item) => {
-      console.log(item);
       if (item.isWebscraped) {
         return item.images;
       } else {
         return item.img;
       }
     });
+
     Promise.all(
       arr.map((url) =>
         fetch(url)
@@ -27,9 +27,10 @@ function ClosetBox({ closetData, closetPreview }) {
       )
     ).then((data) => {
       imageSet(
-        data.map((item) => {
-          if (item.img_1) {
-            let base64 = item.img_1;
+        data.map((data) => {
+          let item = data.img_1;
+          if (item.substring(0, 2) === "b'" && item[item.length - 1]) {
+            let base64 = item;
             base64 = base64.slice(2);
             base64 = base64.slice(0, -1);
             return 'data:image/jpeg;base64,' + base64;
@@ -42,10 +43,6 @@ function ClosetBox({ closetData, closetPreview }) {
 
     return () => {};
   }, []);
-
-  useEffect(() => {
-    // console.log('image state', image);
-  }, [image]);
 
   const handleOpenCloset = () => {
     chrome.tabs.create({

@@ -122,7 +122,7 @@ const Popup = () => {
       userSet(response.user.newValue);
     }
     if (response.notifications) {
-      console.log(response.notifications);
+      console.log('Notifications', response.notifications);
       if (response.notifications.hasOwnProperty('newValue')) {
         notificationDataSet(response.notifications.newValue);
         notificationCountSet(res.notifications.newValue.amount);
@@ -189,7 +189,7 @@ const Popup = () => {
 
       {/* Sliders */}
       <AnimatePresence>
-        {showProfile && <Profile showProfileSet={showProfileSet} />}
+        {showProfile && <Profile showProfileSet={showProfileSet} user={user} />}
       </AnimatePresence>
 
       <AnimatePresence>
@@ -200,7 +200,6 @@ const Popup = () => {
 
       {/* General UI */}
       <Header
-        notificationCount={notificationCount}
         showProfileSet={showProfileSet}
         showNotificationSet={showNotificationSet}
         user={user}

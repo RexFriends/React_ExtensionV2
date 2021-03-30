@@ -122,6 +122,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             URL: msg.uri ? msg.uri : sender_info.url,
             ImagePNG: image,
           };
+          console.log(payload);
           fetch(APIURL + '/api/save-rex?uid=' + result.uId, {
             method: 'POST',
             headers: {
@@ -168,6 +169,12 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           current_item.closets.push(msg.closet_id);
           chrome.storage.local.set({ current_item });
         });
+
+        let closetNotif = {
+          variant: 'good',
+          message: 'Added!',
+        };
+        chrome.storage.local.set({ closetNotif });
       })
       .catch(() => console.log('add-to-closet error'));
 
@@ -198,6 +205,11 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           current_item.closets = tempCloset;
           chrome.storage.local.set({ current_item });
         });
+        let closetNotif = {
+          variant: 'good',
+          message: 'Removed!',
+        };
+        chrome.storage.local.set({ closetNotif });
       })
       .catch(() => console.log('remove-from-closet error'));
 
@@ -226,6 +238,12 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
           current_item.closets.push(json.new_closet.id);
           chrome.storage.local.set({ current_item });
         });
+
+        let closetNotif = {
+          variant: 'good',
+          message: 'Created!',
+        };
+        chrome.storage.local.set({ closetNotif });
       })
       .catch(() => console.log('add-to-new-closet error'));
   }
@@ -279,10 +297,10 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       .then((res) => res.json())
       .then((json) => {
         if (json.success === true) {
-          fetch(APIURL + '/api/getfriends?uid=' + msg.uid)
+          fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=')
             .then((res) => res.json())
             .then((json) => {
-              let friends = json.contacts;
+              let friends = json.users;
               console.log(json);
               let feedbackNotif = {
                 variant: 'good',
@@ -355,6 +373,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       contact_id: msg.contact_id,
       nickname: msg.new_nickname,
     };
+    console.log(payload);
     fetch(APIURL + '/api/editfriendnumber?uid=' + msg.uid, {
       method: 'POST',
       headers: {
@@ -366,17 +385,19 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       .then((json) => {
         console.log(json);
         if (json.success === true) {
-          fetch(APIURL + '/api/getfriends?uid=' + msg.uid)
+          fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=')
             .then((res) => res.json())
             .then((json) => {
-              let friends = json.contacts;
+              let friends = json.users;
+              console.log(json);
               let feedbackNotif = {
                 variant: 'good',
-                message: 'Success!!',
+                message: 'Valid Number',
               };
               chrome.storage.local.set({ friends });
               chrome.storage.local.set({ feedbackNotif });
-            });
+            })
+            .catch(() => console.log('change nickname error'));
         }
       })
       .catch(() => 'edit-friend-name error');
@@ -420,7 +441,6 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
         fetch(APIURL + '/api/get_notif?uid=' + res.uId)
           .then((res) => res.json())
           .then((json) => {
-            console.log('succesfully fetched notifications', json);
             let notifications = json.notifications;
             chrome.storage.local.set({ notifications });
           })
@@ -429,12 +449,12 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     });
   }
   if (msg.action === 'friend search') {
-    fetch(APIURL + '/api/get_users?uid=' + msg.uid + '&text=' + msg.text)
+    fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=' + msg.text)
       .then((res) => res.json())
       .then((json) => {
         console.log('succesfully fetched users', json);
-
-        // chrome.storage.local.set({userSearch})
+        let userSearch = json.users;
+        chrome.storage.local.set({ userSearch });
       })
       .catch(() => console.log('get-user error'));
   }

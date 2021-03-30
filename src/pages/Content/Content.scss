@@ -95,16 +95,33 @@
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
       }
       #itemcloset-list {
-        background-color: rgb(236, 236, 236);
+        background-color: rgb(255, 255, 255);
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
+        border-radius: 5px;
         margin-right: 7px;
-        // min-height: 120px;
-        max-height: 200px;
-        width: 190px;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        height: 450px;
+        width: 300px;
+        #closet-top {
+          display: flex;
+          justify-content: space-between;
+          margin: 5px 2px;
+          padding: 5px 10px;
+          border-bottom: 2px solid rgba(43, 42, 42, 0.521);
+          #title {
+            font-weight: 600;
+            padding-right: 10px;
+            font-size: 16px;
+          }
+          #closet-button {
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+            margin-top: -5px;
+            width: 30px;
+            #svg {
+              font-size: 16px;
+            }
+          }
+        }
+
         #new-closet-button {
           height: 36px;
           width: 100%;
@@ -127,7 +144,7 @@
           margin-top: 0px;
           height: 35px;
           // background-color: #24bdaf;
-          width: 176px;
+          width: 100%;
           display: flex;
           margin-bottom: 2px;
           margin-left: 3px;
@@ -136,8 +153,8 @@
             margin-top: -2px;
             background: transparent;
             margin-left: 8px;
-            height: 25px;
-            width: 109px;
+            height: 30px;
+            width: 245px;
             padding-left: 15px;
           }
           #icon {
@@ -149,45 +166,74 @@
             box-shadow: 0 0 2px rgb(0 0 0 / 40%);
           }
         }
-        #closet-item {
-          // border: solid red 2px;
+        #closets {
+          height: 350px;
 
-          height: 20px;
-          display: flex;
-          #closet-name {
-            // border: solid red 2px;
-            font-size: 16px;
-            margin-left: -5px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            height: 20px;
+          margin: 2px 4px 0px 4px;
+          overflow-x: hidden;
+          overflow-y: auto;
+
+          &::-webkit-scrollbar {
+            width: 14px;
+            height: 18px;
           }
-        }
+          &::-webkit-scrollbar-thumb {
+            height: 6px;
+            border: 4px solid rgba(0, 0, 0, 0);
+            background-clip: padding-box;
+            background-color: rgba(0, 0, 0, 0.15);
+          }
+          &::-webkit-scrollbar-button {
+            width: 0;
+            height: 0;
+            display: none;
+          }
+          &::-webkit-scrollbar-corner {
+            background-color: transparent;
+          }
+          #closet-item {
+            transition: background-color 0.3s;
+            &:hover {
+              background-color: #ececec;
+            }
 
-        &::-webkit-scrollbar {
-          width: 14px;
-          height: 18px;
-        }
-        &::-webkit-scrollbar-thumb {
-          height: 6px;
-          border: 4px solid rgba(0, 0, 0, 0);
-          background-clip: padding-box;
-          background-color: rgba(0, 0, 0, 0.15);
-        }
-        &::-webkit-scrollbar-button {
-          width: 0;
-          height: 0;
-          display: none;
-        }
-        &::-webkit-scrollbar-corner {
-          background-color: transparent;
+            margin: 5px 0px;
+            height: 25px;
+            display: flex;
+            #closet-name {
+              // border: solid red 2px;
+              font-size: 18px;
+              margin-left: 0px;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              height: 20px;
+            }
+          }
+
+          &::-webkit-scrollbar {
+            width: 14px;
+            height: 18px;
+          }
+          &::-webkit-scrollbar-thumb {
+            height: 6px;
+            border: 4px solid rgba(0, 0, 0, 0);
+            background-clip: padding-box;
+            background-color: rgba(0, 0, 0, 0.15);
+          }
+          &::-webkit-scrollbar-button {
+            width: 0;
+            height: 0;
+            display: none;
+          }
+          &::-webkit-scrollbar-corner {
+            background-color: transparent;
+          }
         }
       }
       #sharebox {
-        background-color: rgb(236, 236, 236);
+        background-color: rgb(255, 255, 255);
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
+        border-radius: 5px;
         margin-right: 7px;
         max-height: 450px;
         width: 300px;
@@ -238,13 +284,17 @@
           #searchbar {
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
             height: 35px;
             #motion {
+              width: 90%;
+              display: flex;
+              justify-content: space-between;
               #input {
-                height: 28px;
+                height: 35px;
                 border-radius: 3px;
                 margin: 0px 5px;
-                width: 140px;
+                width: 180px;
               }
               #searchbutton {
                 width: 30px;
@@ -258,12 +308,11 @@
           }
 
           #friendList {
-            height: 210px;
-            border: solid rgb(175, 175, 175) 1px;
+            height: 350px;
             margin: 2px 4px 0px 4px;
             overflow-x: hidden;
             overflow-y: auto;
-            background-color: rgb(250, 246, 246);
+            background-color: rgb(255, 255, 255);
             &::-webkit-scrollbar {
               width: 14px;
               height: 18px;
@@ -282,26 +331,69 @@
             &::-webkit-scrollbar-corner {
               background-color: transparent;
             }
+            #query {
+              margin: 10px 0px;
+              border-bottom: rgb(80, 79, 79) 1px solid;
+              padding-left: 5px;
+              font-weight: 600;
+              padding-right: 5px;
+              justify-content: space-between;
+              display: flex;
+            }
             #friend {
-              background-color: #ececec;
+              transition: background-color 0.3s;
+              &:hover {
+                background-color: #ececec;
+              }
               display: flex;
               margin: 5px 0px;
-              // border: solid red 1px;
               justify-content: space-between;
+              #proimg {
+                width: 25px;
+                height: 25px;
+                object-fit: contain;
+                padding-left: 5px;
+                margin-right: -25px;
+              }
               #name {
                 padding-left: 5px;
 
-                width: 100px;
+                width: 200px;
                 #input {
-                  width: 110px;
+                  width: 200px;
                   margin-left: -3px;
                 }
               }
+            }
+            #no-users {
+              padding: 0px 5px;
+              text-align: center;
             }
           }
         }
       }
       #feedback-notif {
+        position: absolute;
+        z-index: 9999;
+        width: 100px;
+        height: 25px;
+        right: 161px;
+        top: 8px;
+        padding: 0px 4px;
+        text-align: center;
+        border-radius: 5px;
+        overflow: hidden;
+        font-size: 16px;
+        &.bad {
+          border: solid red 2px;
+          color: red;
+        }
+        &.good {
+          border: solid #24bdaf 2px;
+          color: #24bdaf;
+        }
+      }
+      #closet-notif {
         position: absolute;
         z-index: 9999;
         width: 100px;

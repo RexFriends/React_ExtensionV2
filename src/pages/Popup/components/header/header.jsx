@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMail } from 'react-icons/io5';
 
-function Header({
-  showProfileSet,
-  showNotificationSet,
-  user,
-  notificationCount,
-}) {
+function Header({ showProfileSet, showNotificationSet, user }) {
+  const [notifications, notificationsSet] = useState(0);
   const data = {
-    notifications: 100,
-    firstname: 'Firstname Lastname',
     propic:
       'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
-    specialtext: '',
   };
-
+  useEffect(() => {
+    chrome.storage.local.get(['notifications'], (res) => {
+      if (res.notifications) {
+        notificationsSet(res.notifications.amount);
+      }
+    });
+  }, []);
   return (
     <div className="Header">
       <IoMail
@@ -25,20 +24,20 @@ function Header({
         }}
       />
       <div className="badge">
-        {notificationCount > 99 ? (
+        {notifications > 99 ? (
           <>
             <div className="count">99</div>
             <div className="excess">+</div>
           </>
         ) : (
-          <div className="count">{notificationCount}</div>
+          <div className="count">{notifications}</div>
         )}
       </div>
 
       <div id="user">
         {user && <div className="nametag">{user.username}</div>}
         <img
-          src={data.propic}
+          src={user?.profile_image ? user.profile_image : data.propic}
           className="profile"
           onClick={() => {
             showNotificationSet(false);
