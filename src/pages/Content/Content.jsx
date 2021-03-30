@@ -59,6 +59,10 @@ const Content = () => {
       document.execCommand('copy', false);
       inp.remove();
     }
+    if (response.current_item) {
+      currentItemSet(response.current_item.newValue);
+      currentItemClosetsSet(response.current_item.newValue.closets);
+    }
   });
 
   useEffect(() => {
@@ -86,13 +90,7 @@ const Content = () => {
       showShareSet(false);
       setTimeout(() => showClosetSet(!showCloset), 1000);
     } else {
-      showCloset
-        ? showClosetSet(false)
-        : chrome.storage.local.get('current_item', (res) => {
-            currentItemSet(res.current_item);
-            currentItemClosetsSet(res.current_item.closets);
-            showClosetSet(true);
-          });
+      showCloset ? showClosetSet(false) : showClosetSet(true);
     }
   };
 

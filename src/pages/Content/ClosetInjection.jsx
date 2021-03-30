@@ -28,10 +28,11 @@ function ClosetInjection({
       }
     }
   });
-
-  // useEffect(() => {
-  //   console.log('currentItemClosets', currentItemClosets);
-  // });
+  useEffect(() => {
+    console.log('currentItem', currentItem);
+    console.log('currentItemClosets', currentItemClosets);
+    return () => {};
+  }, [currentItem, currentItemClosets]);
 
   const handleNewCloset = () => {
     if (newClosetText !== '') {
