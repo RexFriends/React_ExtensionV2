@@ -44,7 +44,6 @@ chrome.storage.onChanged.addListener((response) => {
       fetch(APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
-          console.log('extension_dashboard 1st try', json);
           //* This means the user account is new & we have to recall this route after the user is created because the new user data needs to be constructed in the db
           if (json.hasOwnProperty('Unauthorized Access')) {
             const runInitialUserFetch = () => {
@@ -122,7 +121,6 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             URL: msg.uri ? msg.uri : sender_info.url,
             ImagePNG: image,
           };
-          console.log(payload);
           fetch(APIURL + '/api/save-rex?uid=' + result.uId, {
             method: 'POST',
             headers: {
@@ -133,9 +131,10 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             .then((response) => response.json())
             .then((json) => {
               if (json.success === false) {
-                console.log(json);
+                console.log('json false', json);
                 chrome.storage.local.set({ closet_save_error: json.reason });
               }
+              console.log('json return after saving rex', json);
               if (json.currentItem) {
                 let current_item = json.currentItem;
                 chrome.storage.local.set({ current_item });

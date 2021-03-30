@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Checkbox from '@material-ui/core/Checkbox';
 import { IoMdAdd } from 'react-icons/io';
@@ -28,6 +28,10 @@ function ClosetInjection({
       }
     }
   });
+
+  // useEffect(() => {
+  //   console.log('currentItemClosets', currentItemClosets);
+  // });
 
   const handleNewCloset = () => {
     if (newClosetText !== '') {
@@ -105,7 +109,13 @@ function ClosetInjection({
               <div id="closet-item" key={i}>
                 <Checkbox
                   color="default"
-                  checked={currentItemClosets.includes(closet.id)}
+                  checked={
+                    closet.name === 'Saved Products'
+                      ? true
+                      : currentItemClosets
+                      ? currentItemClosets.includes(closet.id)
+                      : false
+                  }
                   disabled={closet.name === 'Saved Products'}
                   onClick={() => handleCheck(closet.id)}
                 />
