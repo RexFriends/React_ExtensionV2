@@ -13,18 +13,22 @@ import NotificationImage from './notificationImage';
 function Notification({ showNotificationSet, currentUid }) {
   const [NotifData, notifDataSet] = useState([]);
   useEffect(() => {
-    chrome.storage.local.get('notifications', (res) => {
-      let payload = {
-        action: 'log',
-        log: res.notifications,
-        msg: 'Got here',
-      };
-      notifDataSet(res.notifications.notifications);
-      chrome.runtime.sendMessage(payload);
-    });
-
+    if (!NotifData) {
+      chrome.storage.local.get('notifications', (res) => {
+        let payload = {
+          action: 'log',
+          log: res.notifications,
+          msg: 'Got here',
+        };
+        notifDataSet(res.notifications.notifications);
+        chrome.runtime.sendMessage(payload);
+      });
+    } else {
+      updateAllUnseenNotifications(NotifData);
+    }
+    console.log(NotifData);
     return () => {};
-  }, []);
+  }, [NotifData]);
 
   const spring = {
     type: 'spring',
@@ -64,6 +68,18 @@ function Notification({ showNotificationSet, currentUid }) {
         getNotifications(false);
       })
       .catch(console.error);
+  };
+
+  const updateAllUnseenNotifications = (notifs) => {
+    // update unseen notifs which aren't of the "requested feedback" type
+    if (notifs) {
+      const toUpdate = notifs
+        .filter((n) => !n.seen && n.time_responded)
+        .map((n) => ({ id: n.id, notified_user: true, type: 'completed' }));
+      if (toUpdate.length > 0) {
+        performUpdateCall(toUpdate);
+      }
+    }
   };
 
   return (

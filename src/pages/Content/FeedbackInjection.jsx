@@ -57,8 +57,9 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
 
   chrome.storage.onChanged.addListener((res) => {
     if (res.friends) {
-      // console.log(res.friends.newValue);
-      friendsSet(res.friends.newValue);
+      if (res.friends.newValue !== 'null') {
+        friendsSet(res.friends.newValue);
+      }
     }
     if (res.feedbackNotif) {
       if (res.feedbackNotif.newValue.message !== 'null') {
@@ -86,9 +87,6 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
     }
   });
 
-  // const handleSearchFriend = () => {
-  //   showSearchFriendSet(true);
-  // };
   const handleAddFriendShow = () => {
     showAddFriendSet(true);
     searchBarSet('');
@@ -106,8 +104,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   };
 
   const handleSendRequestClick = (friend) => {
-    console.log(friend);
-    if (friend.isUser === false) {
+    if (friend.is_user === false) {
       let payload = {
         action: 'send rex',
         user_requesting_id: null,
@@ -180,6 +177,12 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
   const handleCancel = () => {
     inputFieldSet('');
     showAddFriendSet(false);
+  };
+  const handleEditFriend = (id) => {
+    if (editFriendShow !== false && editValue !== '') {
+      handleSaveFriend();
+    }
+    editFriendShowSet(id);
   };
 
   return (
@@ -309,24 +312,40 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                 {friends
                   .slice(0)
                   .reverse()
-                  .filter((friend) => {
-                    if (friend.name !== null) {
-                      return friend.name
-                        .toLowerCase()
-                        .includes(searchBar.toLowerCase());
-                    } else {
-                      return false;
-                    }
-                  })
+                  .filter((friend) => friend.phone_number !== tempNumberToMatch)
                   .map((friend, i) => (
                     <div key={i} id="friend">
-                      <img
-                        id="proimg"
-                        src={friend.profile_image}
-                        alt="user-propic"
-                      ></img>
+                      {friend.profile_image !== null ? (
+                        <img
+                          id="proimg"
+                          src={friend.profile_image}
+                          alt="user-propic"
+                        ></img>
+                      ) : (
+                        <img
+                          id="proimg"
+                          src="https://ui-avatars.com/api/?background=bdbcbb&color=fff&rounded=true&name=Null&size=64&length=1"
+                          alt="user-propic"
+                        ></img>
+                      )}
                       <div id="name">
-                        {friend.name ? friend.name : friend.phonenumber}
+                        {editFriendShow === friend.id ? (
+                          <input
+                            id="input"
+                            value={editValue}
+                            onChange={(e) => editValueSet(e.target.value)}
+                            type="text"
+                            autoComplete="off"
+                            maxLength="12"
+                            placeholder="Add Nickname"
+                          ></input>
+                        ) : friend.username ? (
+                          friend.username
+                        ) : friend.name ? (
+                          friend.name
+                        ) : (
+                          friend.phone_number
+                        )}
                       </div>
                       <div id="icons">
                         {editFriendShow === friend.id ? (
@@ -340,6 +359,18 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                           </>
                         ) : (
                           <>
+                            {!friend.username & !friend.name ? (
+                              <IconButton
+                                size="small"
+                                onClick={() => handleEditFriend(friend.id)}
+                              >
+                                <FiEdit />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                style={{ display: 'hidden' }}
+                              ></IconButton>
+                            )}
                             <IconButton
                               size="small"
                               onClick={() => handleSendRequestClick(friend)}

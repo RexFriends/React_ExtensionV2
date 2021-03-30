@@ -23,7 +23,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   const [images, imagesSet] = useState([]);
   const [imageIndex, imageIndexSet] = useState(0);
   const [currentItemExist, currentItemExistSet] = useState(true);
-  const [showAlert, showAlertSet] = useState(undefined);
   const [searchResults, searchResultsSet] = useState(undefined);
   const [searchBar, searchBarSet] = useState('');
   const [editFriendShow, editFriendShowSet] = useState(false);
@@ -36,7 +35,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   const [feedbackNotif, feedbackNotifSet] = useState(undefined);
   const [showNewClosetField, showNewClosetFieldSet] = useState(false);
   const [newClosetText, newClosetTextSet] = useState('');
-  const [closetNotif, closetNotifSet] = useState(undefined);
 
   useEffect(() => {
     //*  only runs if user is new
@@ -59,6 +57,15 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
           fetch(currentItem.images)
             .then((res) => res.json())
             .then((json) => {
+              if (json.img_1 === 'None') {
+                fetch(currentItem.screenshot)
+                  .then((res) => res.json())
+                  .then((json) => {
+                    images.push(<img src={json.uri} id="img" />);
+                    imagesSet(images);
+                  });
+                return;
+              }
               //! need to transform the weird base64 code to an img html object
               for (const key in json) {
                 let base64 = json[key];
@@ -89,7 +96,9 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
         }
       });
     }
-
+    if (currentItem) {
+      console.log(currentItem);
+    }
     return () => {};
   }, [currentItem]);
 
@@ -109,20 +118,12 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [searchBar]);
-  chrome.storage.onChanged.addListener((response) => {
-    if (response.current_copy && response.current_copy.newValue !== null) {
-      let link = response.current_copy.newValue.copy_link;
-      var inp = document.createElement('input');
-      document.body.appendChild(inp);
-      inp.value = link;
-      inp.select();
-      document.execCommand('copy', false);
-      inp.remove();
-      showAlertSet(`Copied! ${link.substr(8)}`);
-      setTimeout(() => showAlertSet(undefined), 2000);
-      setTimeout(() => chrome.storage.local.set({ current_copy: null }), 2500);
+  useEffect(() => {
+    if (closetInput.current !== null) {
+      closetInput.current.focus();
     }
-  });
+    return () => {};
+  }, [newCloset]);
 
   chrome.storage.onChanged.addListener((res) => {
     if (res.userSearch) {
@@ -133,22 +134,26 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
       }
     }
     if (res.feedbackNotif) {
-      if (res.feedbackNotif.newValue.message !== 'null') {
+      console.log(res.feedbackNotif);
+      if (res.feedbackNotif.newValue.message !== null) {
         if (res.feedbackNotif.newValue.message === 'Valid Number') {
           tempNumberToMatchSet(inputField);
           inputFieldSet('');
           showAddFriendNameSet(true);
+        }
+        if (res.feedbackNotif.newValue.message.substring(0, 7) === 'Already') {
+          res.feedbackNotif.newValue.message = 'Already Sent Request';
         }
         feedbackNotifSet(res.feedbackNotif.newValue);
         setTimeout(() => feedbackNotifSet(undefined), 2000);
         setTimeout(() => {
           let feedbackNotif = { message: null };
           chrome.storage.local.set({ feedbackNotif });
-        }, 1000);
+        }, 2000);
       }
     }
     if (res.closetNotif) {
-      if (res.closetNotif.newValue.message !== 'null') {
+      if (res.closetNotif.newValue.message !== null) {
         closetNotifSet(res.closetNotif.newValue);
         setTimeout(() => closetNotifSet(undefined), 1000);
         setTimeout(() => {
@@ -157,14 +162,25 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
         }, 1000);
       }
     }
-  });
-  // focuses on new textbox when rendered
-  useEffect(() => {
-    if (closetInput.current !== null) {
-      closetInput.current.focus();
+    if (res.current_copy && res.current_copy.newValue !== null) {
+      let link = res.current_copy.newValue.copy_link;
+      var inp = document.createElement('input');
+      document.body.appendChild(inp);
+      inp.value = link;
+      inp.select();
+      document.execCommand('copy', false);
+      inp.remove();
+      let feedbackNotif = { message: `Copied! ${link.substr(8)}` };
+      feedbackNotifSet(feedbackNotif);
+      setTimeout(() => feedbackNotifSet(undefined), 2000);
+      setTimeout(() => {
+        let feedbackNotif = { message: null };
+        chrome.storage.local.set({ feedbackNotif });
+      }, 2000);
+
+      setTimeout(() => chrome.storage.local.set({ current_copy: null }), 2500);
     }
-    return () => {};
-  }, [newCloset]);
+  });
 
   // if current item doesn't exist
   if (currentItem === undefined) {
@@ -174,15 +190,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
       </div>
     );
   }
-
-  // closes new closet text box
-  const clearNewCloset = () => {
-    newClosetSet(undefined);
-  };
-
-  const handleFocus = (event) => {
-    event.target.setAttribute('autocomplete', 'off');
-  };
 
   const handleCopyLink = () => {
     let payload = {
@@ -258,7 +265,7 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   };
 
   const handleSendRequestClick = (friend) => {
-    if (friend.isUser === false) {
+    if (friend.is_user === false) {
       let payload = {
         action: 'send rex',
         user_requesting_id: null,
@@ -312,7 +319,12 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
   const handleSearchBar = (e) => {
     searchBarSet(e.target.value);
   };
-
+  const handleEditFriend = (id) => {
+    if (editFriendShow !== false && editValue !== '') {
+      handleSaveFriend();
+    }
+    editFriendShowSet(id);
+  };
   console.log(friends);
 
   return (
@@ -348,14 +360,14 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                 {showPage === 'feedback' ? 'Share' : 'Closets'}
               </div>
               <AnimatePresence>
-                {showAlert && (
+                {feedbackNotif && (
                   <motion.div
                     initial={{ x: 300, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: 300, opacity: 0 }}
                     id="alert"
                   >
-                    {showAlert}
+                    {feedbackNotif.message}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -463,6 +475,9 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                   {friends
                     .slice(0)
                     .reverse()
+                    .filter(
+                      (friend) => friend.phone_number !== tempNumberToMatch
+                    )
                     .map((friend, i) => (
                       <div key={i} id="friend">
                         {friend.profile_image !== null ? (
@@ -479,11 +494,23 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                           ></img>
                         )}
                         <div id="name">
-                          {friend.username
-                            ? friend.username
-                            : friend.name
-                            ? friend.name
-                            : friend.phone_number}
+                          {editFriendShow === friend.id ? (
+                            <input
+                              id="input"
+                              value={editValue}
+                              onChange={(e) => editValueSet(e.target.value)}
+                              type="text"
+                              autoComplete="off"
+                              maxLength="12"
+                              placeholder="Add Nickname"
+                            ></input>
+                          ) : friend.username ? (
+                            friend.username
+                          ) : friend.name ? (
+                            friend.name
+                          ) : (
+                            friend.phone_number
+                          )}
                         </div>
                         <div id="icons">
                           {editFriendShow === friend.id ? (
@@ -503,6 +530,18 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                             </>
                           ) : (
                             <>
+                              {!friend.username & !friend.name ? (
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleEditFriend(friend.id)}
+                                >
+                                  <FiEdit />
+                                </IconButton>
+                              ) : (
+                                <IconButton
+                                  style={{ display: 'hidden' }}
+                                ></IconButton>
+                              )}
                               <IconButton
                                 size="small"
                                 onClick={() => handleSendRequestClick(friend)}
@@ -616,19 +655,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                           ))}
                       </div>
                     </motion.div>
-                    <AnimatePresence>
-                      {closetNotif !== undefined && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className={closetNotif.variant}
-                          id="closet-notif"
-                        >
-                          {closetNotif.message}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </>
                 </motion.div>
               )}

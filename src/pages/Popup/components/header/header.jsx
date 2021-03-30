@@ -23,17 +23,18 @@ function Header({ showProfileSet, showNotificationSet, user }) {
           showNotificationSet(true);
         }}
       />
-      <div className="badge">
-        {notifications > 99 ? (
-          <>
-            <div className="count">99</div>
-            <div className="excess">+</div>
-          </>
-        ) : (
-          <div className="count">{notifications}</div>
-        )}
-      </div>
-
+      {notifications !== 0 && (
+        <div className="badge">
+          {notifications > 99 ? (
+            <>
+              <div className="count">99</div>
+              <div className="excess">+</div>
+            </>
+          ) : (
+            <div className="count">{notifications}</div>
+          )}
+        </div>
+      )}
       <div id="user">
         {user && <div className="nametag">{user.username}</div>}
         <img

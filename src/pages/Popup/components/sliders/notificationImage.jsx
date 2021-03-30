@@ -21,6 +21,15 @@ function NotificationImage({ notification }) {
         fetch(product.images)
           .then((res) => res.json())
           .then((json) => {
+            if (json.img_1 === 'None') {
+              fetch(currentItem.screenshot)
+                .then((res) => res.json())
+                .then((json) => {
+                  images.push(<img src={json.uri} id="img" />);
+                  imagesSet(images);
+                });
+              return;
+            }
             let base64 = json.img_1;
             if (base64.substring(0, 2) === "b'" && base64[base64.length - 1]) {
               base64 = base64.slice(2);

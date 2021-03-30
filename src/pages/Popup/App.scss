@@ -552,7 +552,7 @@ html {
       #img {
         // border: solid red 2px;
         width: 320px;
-        height: 200px;
+        height: 190px;
         object-fit: contain;
       }
     }
@@ -584,16 +584,17 @@ html {
         }
         #alert {
           position: absolute;
-          border: solid #807f7f 2px;
-          top: 223px;
+          border: solid #807f7f 3px;
+          top: 229px;
           border-radius: 10px;
           background-color: white;
           padding: 3px 5px;
-          width: 198px;
-          height: 39px;
-          left: 74px;
+          width: 210px;
+          height: 24px;
+          left: 63px;
           font-weight: 600;
-          font-size: 12px;
+          font-size: 11px;
+          line-height: 24px;
         }
       }
 
