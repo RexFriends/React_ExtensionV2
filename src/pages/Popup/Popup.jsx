@@ -43,9 +43,6 @@ const Popup = () => {
   async function fetchUserInfo() {
     await firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // make a fetch to get user info based on user.uid (or do this in dashboard)
-        // console.log('fetch user info');
-        // console.log('user change', user.email);
         currentUidSet(user.uid);
         updateState('uId', user.uid);
         let payload = {

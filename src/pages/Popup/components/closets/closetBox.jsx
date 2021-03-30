@@ -5,6 +5,7 @@ function ClosetBox({ closetData, closetPreview }) {
 
   useEffect(() => {
     let arr = closetPreview.items.slice(0, 4).map((item) => {
+      console.log(item);
       if (item.isWebscraped) {
         return item.images;
       } else {
@@ -25,10 +26,13 @@ function ClosetBox({ closetData, closetPreview }) {
           })
           .catch((err) => console.log(err))
       )
-    ).then((data) => {
+    ).then((bigData) => {
       imageSet(
-        data.map((data) => {
+        bigData.map((data) => {
           let item = data.img_1;
+          if (item === undefined) {
+            return data;
+          }
           if (item.substring(0, 2) === "b'" && item[item.length - 1]) {
             let base64 = item;
             base64 = base64.slice(2);
@@ -58,7 +62,6 @@ function ClosetBox({ closetData, closetPreview }) {
         {image[2] && <img id="preview" src={image[2]} alt="3"></img>}
         {image[3] && <img id="preview" src={image[3]} alt="3"></img>}
       </div>
-      {/* <Button onClick={handleClick}>Button</Button> */}
       <div className="name">{closetData.name}</div>
     </div>
   );

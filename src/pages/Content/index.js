@@ -14,24 +14,19 @@ async function isSiteBlacklisted(url) {
   let server = 'https://server.rexfriends.com';
   const response = await fetch(server + '/api/get-blacklist-sites');
   const json = await response.json();
-  const index = getPosition(url, '/', 3) + 5;
-  console.log(index);
-  for (var i = 0; i < 3; i++) {
-    if (url.substring(0, index).includes(json.list[i])) {
+  let arr = url.split('.').slice(0, 5);
+  for (var i = 0; i <= json.list.length; i++) {
+    if (arr.includes(json.list[i])) {
       return false;
     }
   }
   return true;
 }
 
-function getPosition(string, subString, index) {
-  return string.split(subString, index).join(subString).length;
-}
-
 chrome.storage.local.get(['showInjection'], (res) => {
   if (res.showInjection === true) {
     isSiteBlacklisted(window.location.toString()).then((res) => {
-      // console.log('Rex Allowed?', res);
+      console.log('Rex Allowed?', res);
       if (res === true) {
         render(
           <Content />,

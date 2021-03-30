@@ -325,7 +325,7 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
     }
     editFriendShowSet(id);
   };
-  console.log(friends);
+  // console.log(friends);
 
   return (
     <div className="CurrentItem">

@@ -348,7 +348,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
+        console.log('send rex return', json);
         let feedbackNotif = '';
         if (json.success === true) {
           feedbackNotif = {
@@ -356,6 +356,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             message: 'Request Sent!',
           };
           chrome.storage.local.set({ feedbackNotif });
+          updateFriends();
         } else {
           feedbackNotif = {
             variant: 'bad',
@@ -372,7 +373,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       contact_id: msg.contact_id,
       nickname: msg.new_nickname,
     };
-    console.log(payload);
+
     fetch(APIURL + '/api/editfriendnumber?uid=' + msg.uid, {
       method: 'POST',
       headers: {
@@ -382,7 +383,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
+        console.log('change nickname return:', json);
         if (json.success === true) {
           fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=')
             .then((res) => res.json())
@@ -436,10 +437,12 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   //* Update notifications
   if (msg.action === 'update notification') {
     chrome.storage.local.get('uId', (res) => {
+      console.log('updating notification', res);
       if (res.uId !== 'empty') {
         fetch(APIURL + '/api/get_notif?uid=' + res.uId)
           .then((res) => res.json())
           .then((json) => {
+            console.log('notification return:', json);
             let notifications = json.notifications;
             chrome.storage.local.set({ notifications });
           })
@@ -458,3 +461,21 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       .catch(() => console.log('get-user error'));
   }
 });
+
+const updateFriends = () => {
+  chrome.storage.local.get(['uId'], function (result) {
+    fetch(APIURL + '/api/get-users?uid=' + result.uId + '&text=')
+      .then((res) => res.json())
+      .then((json) => {
+        let friends = json.users;
+        console.log(json);
+        let feedbackNotif = {
+          variant: 'good',
+          message: 'Valid Number',
+        };
+        chrome.storage.local.set({ friends });
+        chrome.storage.local.set({ feedbackNotif });
+      })
+      .catch(() => console.log('update friend'));
+  });
+};

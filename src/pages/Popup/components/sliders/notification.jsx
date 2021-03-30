@@ -13,22 +13,24 @@ import NotificationImage from './notificationImage';
 function Notification({ showNotificationSet, currentUid }) {
   const [NotifData, notifDataSet] = useState([]);
   useEffect(() => {
-    if (!NotifData) {
+    updateNotifications();
+    if (!!NotifData) {
       chrome.storage.local.get('notifications', (res) => {
-        let payload = {
-          action: 'log',
-          log: res.notifications,
-          msg: 'Got here',
-        };
         notifDataSet(res.notifications.notifications);
-        chrome.runtime.sendMessage(payload);
       });
     } else {
       updateAllUnseenNotifications(NotifData);
     }
-    console.log(NotifData);
+
     return () => {};
   }, [NotifData]);
+
+  function updateNotifications() {
+    let payload = {
+      action: 'update notification',
+    };
+    chrome.runtime.sendMessage(payload);
+  }
 
   const spring = {
     type: 'spring',
@@ -53,7 +55,6 @@ function Notification({ showNotificationSet, currentUid }) {
   };
 
   const performUpdateCall = (toUpdate) => {
-    console.log(toUpdate);
     const rexUID = localStorage.getItem('rexUID');
     fetch(`${APIURL}/api/update-notification?uid=${rexUID}`, {
       method: 'POST',
@@ -164,7 +165,6 @@ function Notification({ showNotificationSet, currentUid }) {
                 {notif.feedback && <div id="feedback">{notif.feedback}</div>}
                 {notif.notif_type === 'Request' ? (
                   <IconButton
-                    disabled={notif.seen}
                     onClick={() => redirectToFeedbackForm(notif)}
                     id="icon"
                     className="link"

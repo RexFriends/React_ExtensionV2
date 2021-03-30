@@ -17,16 +17,16 @@ function NotificationImage({ notification }) {
     }
 
     if (product) {
+      console.log(product);
       if (product.images) {
         fetch(product.images)
           .then((res) => res.json())
           .then((json) => {
             if (json.img_1 === 'None') {
-              fetch(currentItem.screenshot)
+              fetch(product.screenshot)
                 .then((res) => res.json())
                 .then((json) => {
-                  images.push(<img src={json.uri} id="img" />);
-                  imagesSet(images);
+                  setImage(json.uri);
                 });
               return;
             }
