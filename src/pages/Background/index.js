@@ -55,6 +55,7 @@ chrome.storage.onChanged.addListener((response) => {
                   chrome.storage.local.set(json);
                 })
                 .catch(() => console.log('extension-dashboard error'));
+              console.log('notif call');
               fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
                 .then((res) => res.json())
                 .then((json) => {
@@ -65,6 +66,7 @@ chrome.storage.onChanged.addListener((response) => {
             setTimeout(() => runInitialUserFetch(), 1000);
             return;
           } else {
+            console.log('notifcall 2');
             fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
               .then((res) => res.json())
               .then((json) => {
@@ -439,6 +441,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     chrome.storage.local.get('uId', (res) => {
       console.log('updating notification', res);
       if (res.uId !== 'empty') {
+        console.log('notif call 3');
         fetch(APIURL + '/api/get_notif?uid=' + res.uId)
           .then((res) => res.json())
           .then((json) => {
@@ -469,12 +472,7 @@ const updateFriends = () => {
       .then((json) => {
         let friends = json.users;
         console.log(json);
-        let feedbackNotif = {
-          variant: 'good',
-          message: 'Valid Number',
-        };
         chrome.storage.local.set({ friends });
-        chrome.storage.local.set({ feedbackNotif });
       })
       .catch(() => console.log('update friend'));
   });

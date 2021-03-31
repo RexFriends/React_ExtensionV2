@@ -13,12 +13,12 @@ import NotificationImage from './notificationImage';
 function Notification({ showNotificationSet, currentUid }) {
   const [NotifData, notifDataSet] = useState([]);
   useEffect(() => {
-    updateNotifications();
     if (!!NotifData) {
       chrome.storage.local.get('notifications', (res) => {
         notifDataSet(res.notifications.notifications);
       });
     } else {
+      updateNotifications();
       updateAllUnseenNotifications(NotifData);
     }
 
