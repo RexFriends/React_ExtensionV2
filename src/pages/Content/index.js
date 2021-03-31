@@ -10,13 +10,15 @@ content.id = 'rex-content-injection';
 shadownRoot.append(content);
 container.append(shadownRoot);
 
-async function isSiteBlacklisted(url) {
+async function isInjectionAllowed(url) {
   let server = 'https://server.rexfriends.com';
   const response = await fetch(server + '/api/get-blacklist-sites');
   const json = await response.json();
-  let arr = url.split('.').slice(0, 5);
+
+  // url = url.substring(7, 40);
+  url = url.replace(/(^\w+:|^)\/\//, '').split('/')[0];
   for (var i = 0; i <= json.list.length; i++) {
-    if (arr.includes(json.list[i])) {
+    if (url.includes(json.list[i])) {
       return false;
     }
   }
@@ -25,7 +27,7 @@ async function isSiteBlacklisted(url) {
 
 chrome.storage.local.get(['showInjection'], (res) => {
   if (res.showInjection === true) {
-    isSiteBlacklisted(window.location.toString()).then((res) => {
+    isInjectionAllowed(window.location.toString()).then((res) => {
       console.log('Rex Allowed?', res);
       if (res === true) {
         render(
