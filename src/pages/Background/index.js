@@ -466,7 +466,7 @@ const updateFriends = () => {
 };
 
 const updateNotifications = () => {
-  console.log("update notifications called")
+  console.log("Update Notifications Fetch")
   chrome.storage.local.get('uId', (res) => {
       if (res.uId !== 'empty') {
         console.log('notif call 3');
