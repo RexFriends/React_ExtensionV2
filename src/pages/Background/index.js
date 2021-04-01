@@ -404,7 +404,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       })
       .catch(() => 'edit-friend-name error');
   }
-  //* Send friend request (currently not being used)
+
   if (msg.action === 'send friend request') {
     let payload = {
       username: msg.username,
@@ -436,22 +436,9 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       })
       .catch(() => console.log('send-friend-request error'));
   }
-  //* Update notifications
+
   if (msg.action === 'update notification') {
-    chrome.storage.local.get('uId', (res) => {
-      console.log('updating notification', res);
-      if (res.uId !== 'empty') {
-        console.log('notif call 3');
-        fetch(APIURL + '/api/get_notif?uid=' + res.uId)
-          .then((res) => res.json())
-          .then((json) => {
-            console.log('notification return:', json);
-            let notifications = json.notifications;
-            chrome.storage.local.set({ notifications });
-          })
-          .catch(() => console.log('update-notification error'));
-      }
-    });
+    updateNotifications()
   }
   if (msg.action === 'friend search') {
     fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=' + msg.text)
@@ -477,3 +464,19 @@ const updateFriends = () => {
       .catch(() => console.log('update friend'));
   });
 };
+
+const updateNotifications = () => {
+  console.log("update notifications called")
+  chrome.storage.local.get('uId', (res) => {
+      if (res.uId !== 'empty') {
+        console.log('notif call 3');
+        fetch(APIURL + '/api/get_notif?uid=' + res.uId)
+          .then((res) => res.json())
+          .then((json) => {
+            let notifications = json.notifications;
+            chrome.storage.local.set({ notifications });
+          })
+          .catch(() => console.log('update-notification error'));
+      }
+    });
+}
