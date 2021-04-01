@@ -454,6 +454,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     });
   }
   if (msg.action === 'friend search') {
+    console.log("test")
     fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=' + msg.text)
       .then((res) => res.json())
       .then((json) => {
