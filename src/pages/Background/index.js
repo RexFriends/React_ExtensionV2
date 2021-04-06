@@ -56,6 +56,10 @@ chrome.storage.onChanged.addListener((response) => {
                   // console.log('extension fetch json', json);
                   chrome.storage.local.set(json);
                   chrome.storage.local.set({ page: 0 });
+                  let closet = json.closet_preview.map((closet) => {
+                    return { name: closet.closet_name, id: closet.id };
+                  });
+                  chrome.storage.local.set({ closet });
                 })
                 .catch(() => console.log('extension-dashboard error'));
               // console.log('notif call');
@@ -78,6 +82,11 @@ chrome.storage.onChanged.addListener((response) => {
               });
           }
           chrome.storage.local.set(json);
+          let closet = json.closet_preview.map((closet) => {
+            return { name: closet.closet_name, id: closet.id };
+          });
+          chrome.storage.local.set({ closet });
+          chrome.storage.local.set({ page: 0 });
         });
     }
   }
@@ -481,6 +490,10 @@ const updateCloset = () => {
           // console.log('Update Closets', json);
           let closet_preview = json.closet_preview;
           chrome.storage.local.set({ closet_preview });
+          let closet = json.closet_preview.map((closet) => {
+            return { name: closet.closet_name, id: closet.id };
+          });
+          chrome.storage.local.set({ closet });
         })
         .catch(() => console.log('update-preview error'));
     }

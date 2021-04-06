@@ -29,6 +29,7 @@ const Content = () => {
   chrome.storage.onChanged.addListener((response) => {
     if (response.closet) {
       closetListSet(response.closet.newValue);
+      console.log('Closet', response.closet);
       if (response.closet.newValue && response.closet.oldValue) {
         if (response.closet.newValue.length > response.closet.oldValue.length) {
           let newClosetId =
@@ -70,6 +71,7 @@ const Content = () => {
       uidSet(res.uId);
       closetListSet(res.closet);
     });
+    chrome.storage.local.get(null, (res) => console.log(res));
     return () => {};
   }, []);
 

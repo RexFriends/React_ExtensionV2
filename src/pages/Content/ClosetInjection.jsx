@@ -35,6 +35,11 @@ function ClosetInjection({
   }, [currentItem, currentItemClosets]);
 
   const handleNewCloset = () => {
+    if (closetList.map((closet) => closet.name).includes(newClosetText)) {
+      closetNotifSet({ message: 'No Duplicates!' });
+      // setTimeout(() => closetNotifSet(undefined), 1000);
+      return;
+    }
     if (newClosetText !== '') {
       let payload = {
         action: 'add to-new-closet',
@@ -106,23 +111,25 @@ function ClosetInjection({
         )}
         <div id="closets">
           {closetList &&
-            closetList.map((closet, i) => (
-              <div id="closet-item" key={i}>
-                <Checkbox
-                  color="default"
-                  checked={
-                    closet.name === 'Saved Products'
-                      ? true
-                      : currentItemClosets
-                      ? currentItemClosets.includes(closet.id)
-                      : false
-                  }
-                  disabled={closet.name === 'Saved Products'}
-                  onClick={() => handleCheck(closet.id)}
-                />
-                <div id="closet-name">{closet.name}</div>
-              </div>
-            ))}
+            closetList
+              .sort((a, b) => a.id < b.id)
+              .map((closet, i) => (
+                <div id="closet-item" key={i}>
+                  <Checkbox
+                    color="default"
+                    checked={
+                      closet.name === 'Saved Products'
+                        ? true
+                        : currentItemClosets
+                        ? currentItemClosets.includes(closet.id)
+                        : false
+                    }
+                    disabled={closet.name === 'Saved Products'}
+                    onClick={() => handleCheck(closet.id)}
+                  />
+                  <div id="closet-name">{closet.name}</div>
+                </div>
+              ))}
         </div>
       </motion.div>
       <AnimatePresence>
