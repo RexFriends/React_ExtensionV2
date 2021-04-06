@@ -7,7 +7,7 @@ import Notification from './components/sliders/notification';
 import Landing from './components/landing/landing';
 import CurrentItem from './components/currentItem/currentItem';
 // import Home from './components/home/home';
-import Closets from './components/closets/newClosets';
+import Closets from './components/closets/Closets';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 
@@ -28,13 +28,9 @@ const Popup = () => {
   const [showNotification, showNotificationSet] = useState(false);
 
   // these states persist & are saved in chrome.local
-  const [homePageData, homePageDataSet] = useState(undefined);
   const [friendsData, friendsDataSet] = useState(undefined);
   const [currentItemData, currentItemDataSet] = useState(undefined);
-  const [notificationData, notificationDataSet] = useState(undefined);
-  const [notificationCount, notificationCountSet] = useState(0);
   const [closetData, closetDataSet] = useState([]);
-  const [closetPreviewData, closetPreviewDataSet] = useState([]);
   const [user, userSet] = useState(undefined);
 
   const [[page, direction], setPage] = useState([undefined, 0]);
@@ -45,11 +41,8 @@ const Popup = () => {
       if (user) {
         currentUidSet(user.uid);
         updateState('uId', user.uid);
-        let payload = {
-          action: 'update preview',
-          uid: user.uid,
-        };
-        chrome.runtime.sendMessage(payload);
+        showProfileSet(false);
+        showNotificationSet(false);
       } else {
         currentUidSet('empty');
       }
@@ -61,34 +54,26 @@ const Popup = () => {
     };
     chrome.runtime.sendMessage(payload);
   }
+  function updateClosetPreview() {
+    let payload = {
+      action: 'update preview',
+    };
+    chrome.runtime.sendMessage(payload);
+  }
 
   useEffect(() => {
+    updateClosetPreview();
     fetchUserInfo();
     updateNotifications();
     chrome.storage.local.get(
-      [
-        'current_item',
-        'friends',
-        'closet',
-        'closet_preview',
-        'homepage',
-        'page',
-        'uId',
-        'user',
-        'notifications',
-      ],
+      ['current_item', 'friends', 'closet', 'homepage', 'page', 'uId', 'user'],
       (res) => {
-        // console.log(res.user);
         currentItemDataSet(res.current_item);
         friendsDataSet(res.friends);
         closetDataSet(res.closet);
-        homePageDataSet(res.homepage);
-        closetPreviewDataSet(res.closet_preview);
         setPage([res.page, 0]);
         currentUidSet(res.uId);
         userSet(res.user);
-        notificationDataSet(res.notifications);
-        notificationCountSet(res.notifications.amount);
       }
     );
     return () => {};
@@ -97,33 +82,18 @@ const Popup = () => {
   chrome.storage.onChanged.addListener((response) => {
     if (response.closet) {
       closetDataSet(response.closet.newValue);
-      // console.log('closet values have changed', response);
     }
     if (response.friends) {
       friendsDataSet(response.friends.newValue);
-      // console.log('friends values have changed', response);
     }
     if (response.current_item) {
       currentItemDataSet(response.current_item.newValue);
-      // console.log('currentItem values have changed', response);
     }
     if (response.homepage) {
       homePageDataSet(response.homepage.newValue);
-      // console.log('homepage values have changed', response);
-    }
-    if (response.closet_preview) {
-      closetPreviewDataSet(response.closet_preview.newValue);
-      // console.log('closetPreview values have changed', response);
     }
     if (response.user) {
       userSet(response.user.newValue);
-    }
-    if (response.notifications) {
-      console.log('Notifications', response.notifications);
-      if (response.notifications.hasOwnProperty('newValue')) {
-        notificationDataSet(response.notifications.newValue);
-        notificationCountSet(res.notifications.newValue.amount);
-      }
     }
   });
 
@@ -142,11 +112,7 @@ const Popup = () => {
       friends={friendsData}
     />,
     // <Home uid={currentUid} homepageData={homePageData} />,
-    <Closets
-      uid={currentUid}
-      closetData={closetData}
-      closetPreviews={closetPreviewData}
-    />,
+    <Closets uid={currentUid} closetData={closetData} />,
   ];
 
   // Handle Page Scroll Animation
