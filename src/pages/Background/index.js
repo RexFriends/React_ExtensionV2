@@ -44,6 +44,7 @@ chrome.storage.onChanged.addListener((response) => {
       fetch(APIURL + '/api/extension_dashboard?uid=' + response.uId.newValue)
         .then((res) => res.json())
         .then((json) => {
+          // console.log('first fetch json', json);
           //* This means the user account is new & we have to recall this route after the user is created because the new user data needs to be constructed in the db
           if (json.hasOwnProperty('Unauthorized Access')) {
             const runInitialUserFetch = () => {
@@ -52,10 +53,12 @@ chrome.storage.onChanged.addListener((response) => {
               )
                 .then((res) => res.json())
                 .then((json) => {
+                  // console.log('extension fetch json', json);
                   chrome.storage.local.set(json);
+                  chrome.storage.local.set({ page: 0 });
                 })
                 .catch(() => console.log('extension-dashboard error'));
-              console.log('notif call');
+              // console.log('notif call');
               fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
                 .then((res) => res.json())
                 .then((json) => {
@@ -66,7 +69,7 @@ chrome.storage.onChanged.addListener((response) => {
             setTimeout(() => runInitialUserFetch(), 1000);
             return;
           } else {
-            console.log('notifcall 2');
+            // console.log('notifcall 2');
             fetch(APIURL + '/api/get_notif?uid=' + response.uId.newValue)
               .then((res) => res.json())
               .then((json) => {
@@ -109,9 +112,8 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((json) => console.log('signupweb fetch result:', json));
+    }).then((res) => res.json());
+    // .then((json) => console.log('signupweb fetch result:', json));
     return;
   }
   //* Screenshots & saves product/page
@@ -302,7 +304,6 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
             .then((res) => res.json())
             .then((json) => {
               let friends = json.users;
-              console.log(json);
               let feedbackNotif = {
                 variant: 'good',
                 message: 'Valid Number',
@@ -323,17 +324,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
   }
   //* Updates the closet preview page
   if (msg.action === 'update preview') {
-    if (msg.uid) {
-      let uId = msg.uid;
-      chrome.storage.local.set({ uId });
-      fetch(APIURL + '/api/closet_preview?uid=' + msg.uid)
-        .then((res) => res.json())
-        .then((json) => {
-          let closet_preview = json.closet_preview;
-          chrome.storage.local.set({ closet_preview });
-        })
-        .catch(() => console.log('update-preview error'));
-    }
+    updateCloset();
   }
   //* Sends a rex to a friend
   if (msg.action === 'send rex') {
@@ -404,7 +395,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       })
       .catch(() => 'edit-friend-name error');
   }
-  //* Send friend request (currently not being used)
+
   if (msg.action === 'send friend request') {
     let payload = {
       username: msg.username,
@@ -436,28 +427,16 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       })
       .catch(() => console.log('send-friend-request error'));
   }
-  //* Update notifications
+
   if (msg.action === 'update notification') {
-    chrome.storage.local.get('uId', (res) => {
-      console.log('updating notification', res);
-      if (res.uId !== 'empty') {
-        console.log('notif call 3');
-        fetch(APIURL + '/api/get_notif?uid=' + res.uId)
-          .then((res) => res.json())
-          .then((json) => {
-            console.log('notification return:', json);
-            let notifications = json.notifications;
-            chrome.storage.local.set({ notifications });
-          })
-          .catch(() => console.log('update-notification error'));
-      }
-    });
+    updateNotifications();
   }
+
   if (msg.action === 'friend search') {
     fetch(APIURL + '/api/get-users?uid=' + msg.uid + '&text=' + msg.text)
       .then((res) => res.json())
       .then((json) => {
-        console.log('succesfully fetched users', json);
+        // console.log('succesfully fetched users', json);
         let userSearch = json.users;
         chrome.storage.local.set({ userSearch });
       })
@@ -470,10 +449,40 @@ const updateFriends = () => {
     fetch(APIURL + '/api/get-users?uid=' + result.uId + '&text=')
       .then((res) => res.json())
       .then((json) => {
+        // console.log('Update Friends', json);
         let friends = json.users;
-        console.log(json);
         chrome.storage.local.set({ friends });
       })
       .catch(() => console.log('update friend'));
+  });
+};
+
+const updateNotifications = () => {
+  chrome.storage.local.get('uId', (res) => {
+    if (res.uId !== 'empty') {
+      fetch(APIURL + '/api/get_notif?uid=' + res.uId)
+        .then((res) => res.json())
+        .then((json) => {
+          // console.log('Update Notifications', json);
+          let notifications = json.notifications;
+          chrome.storage.local.set({ notifications });
+        })
+        .catch(() => console.log('update-notification error'));
+    }
+  });
+};
+
+const updateCloset = () => {
+  chrome.storage.local.get('uId', (res) => {
+    if (res.uId !== 'empty') {
+      fetch(APIURL + '/api/closet_preview?uid=' + res.uId)
+        .then((res) => res.json())
+        .then((json) => {
+          // console.log('Update Closets', json);
+          let closet_preview = json.closet_preview;
+          chrome.storage.local.set({ closet_preview });
+        })
+        .catch(() => console.log('update-preview error'));
+    }
   });
 };

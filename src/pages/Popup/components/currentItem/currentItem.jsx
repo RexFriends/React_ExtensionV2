@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import Moment from 'react-moment';
+
 import { FaCopy } from 'react-icons/fa';
-import { BiCloset } from 'react-icons/bi';
-import { VscChromeClose } from 'react-icons/vsc';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import Carousel, { Dots } from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
@@ -15,26 +14,20 @@ import { AiOutlineUserAdd, AiOutlineSearch } from 'react-icons/ai';
 import { GrLinkNext } from 'react-icons/gr';
 import { FiSearch } from 'react-icons/fi';
 import { FaUserFriends } from 'react-icons/fa';
-import { IoIosAddCircleOutline } from 'react-icons/io';
 
 function CurrentItem({ uid, currentItem, closets, friends }) {
-  const [showPage, showPageSet] = useState('feedback');
-  const [newCloset, newClosetSet] = useState(undefined);
   const [images, imagesSet] = useState([]);
   const [imageIndex, imageIndexSet] = useState(0);
   const [currentItemExist, currentItemExistSet] = useState(true);
   const [searchResults, searchResultsSet] = useState(undefined);
   const [searchBar, searchBarSet] = useState('');
   const [editFriendShow, editFriendShowSet] = useState(false);
-  const closetInput = useRef(null);
   const [editValue, editValueSet] = useState('');
   const [showAddFriend, showAddFriendSet] = useState(false);
   const [showAddFriendName, showAddFriendNameSet] = useState(false);
   const [inputField, inputFieldSet] = useState('');
   const [tempNumberToMatch, tempNumberToMatchSet] = useState(undefined);
   const [feedbackNotif, feedbackNotifSet] = useState(undefined);
-  const [showNewClosetField, showNewClosetFieldSet] = useState(false);
-  const [newClosetText, newClosetTextSet] = useState('');
 
   useEffect(() => {
     //*  only runs if user is new
@@ -96,9 +89,7 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
         }
       });
     }
-    if (currentItem) {
-      console.log(currentItem);
-    }
+
     return () => {};
   }, [currentItem]);
 
@@ -118,12 +109,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [searchBar]);
-  useEffect(() => {
-    if (closetInput.current !== null) {
-      closetInput.current.focus();
-    }
-    return () => {};
-  }, [newCloset]);
 
   chrome.storage.onChanged.addListener((res) => {
     if (res.userSearch) {
@@ -170,7 +155,9 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
       inp.select();
       document.execCommand('copy', false);
       inp.remove();
-      let feedbackNotif = { message: `Copied! ${link.substr(8)}` };
+      let feedbackNotif = {
+        message: <div id="smaller">{`Copied! ${link.substr(8)}`}</div>,
+      };
       feedbackNotifSet(feedbackNotif);
       setTimeout(() => feedbackNotifSet(undefined), 2000);
       setTimeout(() => {
@@ -284,38 +271,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
     }
   };
 
-  const handleNewCloset = () => {
-    if (newClosetText !== '') {
-      let payload = {
-        action: 'add to-new-closet',
-        closet_name: newClosetText, // closet id
-        item_id: currentItem.id, // item id
-        uid: uid,
-        closets: closetList,
-      };
-      chrome.runtime.sendMessage(payload);
-    }
-    newClosetTextSet('');
-    showNewClosetFieldSet(false);
-  };
-  const handleCheck = (closet_id) => {
-    let tempCurrent = currentItemClosets;
-    let payload = {
-      closet_id: closet_id,
-      item_id: currentItem.id,
-      uid: uid,
-    };
-    if (currentItemClosets.includes(closet_id)) {
-      tempCurrent = tempCurrent.filter((id) => id !== closet_id);
-      payload.action = 'remove closet-item';
-    } else {
-      payload.action = 'add closet-item';
-      tempCurrent = [closet_id, ...tempCurrent];
-    }
-    chrome.runtime.sendMessage(payload);
-    currentItemClosetsSet(tempCurrent);
-  };
-
   const handleSearchBar = (e) => {
     searchBarSet(e.target.value);
   };
@@ -339,26 +294,10 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
               onChange={handleCarousel}
               plugins={['centered']}
             />
-            {/* Don't need a dot carousel if there's only one image */}
-            {/* <Dots
-            value={imageIndex}
-            onChange={handleCarousel}
-            number={images.length}
-          /> */}
           </div>
           <div id="options">
             <div id="features">
-              {/* <IconButton
-                onClick={() =>
-                  showPageSet(showPage === 'closet' ? 'feedback' : 'closet')
-                }
-                className="icon"
-              >
-                {showPage === 'closet' ? <VscChromeClose /> : <BiCloset />}
-              </IconButton> */}
-              <div className="text">
-                {showPage === 'feedback' ? 'Share' : 'Closets'}
-              </div>
+              <div className="text">Share</div>
               <AnimatePresence>
                 {feedbackNotif && (
                   <motion.div
@@ -590,75 +529,6 @@ function CurrentItem({ uid, currentItem, closets, friends }) {
                 </>
               )}
             </div>
-            {/* Closet */}
-            <AnimatePresence>
-              {showPage === 'closet' && (
-                <motion.div
-                  id="closets"
-                  initial={{ x: -350 }}
-                  animate={{ x: 0 }}
-                  exit={{ x: -350 }}
-                >
-                  <>
-                    <motion.div
-                      id="itemcloset-list"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 450, opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                    >
-                      <div id="closet-top">
-                        <div id="title">Closets</div>
-                        <IconButton size="small" id="closet-button" disabled>
-                          <BiCloset id="svg" />
-                        </IconButton>
-                      </div>
-                      {showNewClosetField ? (
-                        <div id="new-closet-field">
-                          <input
-                            id="textfield"
-                            placeholder="Closet Name"
-                            autoComplete="off"
-                            maxLength="12"
-                            value={newClosetText}
-                            onChange={(e) => newClosetTextSet(e.target.value)}
-                          />
-                          <IconButton
-                            onClick={handleNewCloset}
-                            size="small"
-                            id="icon"
-                          >
-                            <IoMdAdd />
-                          </IconButton>
-                        </div>
-                      ) : (
-                        <Button
-                          id="new-closet"
-                          onClick={() => showNewClosetFieldSet(true)}
-                          id="new-closet-button"
-                          startIcon={<IoIosAddCircleOutline />}
-                        >
-                          New Closet
-                        </Button>
-                      )}
-                      <div id="closets">
-                        {closetList &&
-                          closetList.map((closet, i) => (
-                            <div id="closet-item" key={i}>
-                              <Checkbox
-                                color="default"
-                                checked={currentItemClosets.includes(closet.id)}
-                                disabled={closet.name === 'Saved Products'}
-                                onClick={() => handleCheck(closet.id)}
-                              />
-                              <div id="closet-name">{closet.name}</div>
-                            </div>
-                          ))}
-                      </div>
-                    </motion.div>
-                  </>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         </>
       ) : (

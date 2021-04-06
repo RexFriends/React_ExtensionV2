@@ -130,6 +130,9 @@ function Notification({ showNotificationSet, currentUid }) {
               id="notif"
               key={i}
               className={!notif.seen ? 'highlight' : 'nohighlight'}
+              style={{
+                height: notif.notif_type === 'Request' ? '140px' : '190px',
+              }}
             >
               <div id="first">
                 <img src={notif.profile_image} alt="propic" id="profilepic" />
@@ -140,7 +143,22 @@ function Notification({ showNotificationSet, currentUid }) {
                   <div id="username">@{notif.username}</div>
                 </div>
                 <div id="type" className={notif.notif_type}>
-                  {notif.notif_type}
+                  {notif.notif_type === 'Request' && notif.seen === false ? (
+                    <>
+                      Request
+                      <IconButton
+                        onClick={() => redirectToFeedbackForm(notif)}
+                        id="icon"
+                        className="link"
+                      >
+                        <Send style={{ color: '#37DB69' }} />
+                      </IconButton>
+                    </>
+                  ) : notif.notif_type === 'Request' ? (
+                    'Submitted'
+                  ) : (
+                    'Completed'
+                  )}
                 </div>
               </div>
               <div id="second">
@@ -161,22 +179,16 @@ function Notification({ showNotificationSet, currentUid }) {
                   </div>
                 )}
               </div>
-              <div id="third">
-                {notif.feedback && <div id="feedback">{notif.feedback}</div>}
-                {notif.notif_type === 'Request' ? (
-                  <IconButton
-                    onClick={() => redirectToFeedbackForm(notif)}
-                    id="icon"
-                    className="link"
-                  >
-                    <Send style={{ color: '#37DB69' }} />
-                  </IconButton>
-                ) : notif.thumbsUp === null ? (
-                  <AiOutlineSmile style={{ color: '#37DB69' }} id="icon" />
-                ) : (
-                  <AiOutlineFrown style={{ color: '#FD6C73' }} id="icon" />
-                )}
-              </div>
+              {notif.feedback && (
+                <div id="third">
+                  {notif.feedback && <div id="feedback">{notif.feedback}</div>}
+                  {notif.thumbsUp === true ? (
+                    <AiOutlineSmile style={{ color: '#37DB69' }} id="icon" />
+                  ) : (
+                    <AiOutlineFrown style={{ color: '#FD6C73' }} id="icon" />
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

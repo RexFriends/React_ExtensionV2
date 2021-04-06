@@ -17,7 +17,7 @@ function NotificationImage({ notification }) {
     }
 
     if (product) {
-      console.log(product);
+      // console.log(product);
       if (product.images) {
         fetch(product.images)
           .then((res) => res.json())
