@@ -162,21 +162,27 @@ function Notification({ showNotificationSet, currentUid }) {
                 </div>
               </div>
               <div id="second">
-                <NotificationImage notification={notif} />
-                {notif.product_info && notif.product_info.images && (
-                  <div id="webscrape">
-                    <div id="brand">{notif.product_info.brand}</div>
-                    <div id="name">
-                      <TextOverflow
-                        text={
-                          notif.product_info.name
-                            ? notif.product_info.name.split(',')[0]
-                            : ''
-                        }
-                        overflowLength={36}
-                      />
-                    </div>
-                  </div>
+                {notif.product_info.name ? (
+                  <>
+                    <NotificationImage notification={notif} />
+                    {notif.product_info && notif.product_info.images && (
+                      <div id="webscrape">
+                        <div id="brand">{notif.product_info.brand}</div>
+                        <div id="name">
+                          <TextOverflow
+                            text={
+                              notif.product_info.name
+                                ? notif.product_info.name.split(',')[0]
+                                : ''
+                            }
+                            overflowLength={36}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <NotificationImage notification={notif} />
                 )}
               </div>
               {notif.feedback && (

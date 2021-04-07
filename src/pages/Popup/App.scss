@@ -220,6 +220,10 @@ html {
         border-radius: 100px;
         margin: 0px auto;
       }
+      #username {
+        font-size: 16px;
+        margin-top: -80px;
+      }
       #signout {
         width: 200px;
         margin: 0px auto;
@@ -448,7 +452,7 @@ html {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      font-size: 16px;
+      font-size: 12px;
     }
     .profile {
       // border: solid red 2px;
@@ -985,6 +989,7 @@ html {
       height: 150px;
       // border: solid red 2px;
       border-radius: 10px;
+      position: relative;
       #name {
         // border: solid red 2px;
         text-align: left;
@@ -997,9 +1002,9 @@ html {
       }
       #button {
         // border: solid red 2px;
-        position: relative;
-        top: 53px;
-        left: 48px;
+        position: absolute;
+        top: 100px;
+        left: 100px;
         color: white;
       }
     }

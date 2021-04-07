@@ -5,24 +5,17 @@ function NotificationImage({ notification }) {
   const [image, setImage] = useState(undefined);
   useEffect(() => {
     if (!product) {
-      chrome.storage.local.get('uId', (res) => {
-        fetch(
-          `${APIURL}/api/product?product_id=${notification.product_info.id}&uid=${res.uId}`
-        )
-          .then((res) => res.json())
-          .then((json) => {
-            setProduct(json.product);
-          });
-      });
+      setProduct(notification.product_info);
     }
-
     if (product) {
       // console.log(product);
       if (product.images) {
         fetch(product.images)
           .then((res) => res.json())
           .then((json) => {
+            // console.log('json call here', json);
             if (json.img_1 === 'None') {
+              // console.log('no image got here screenshot');
               fetch(product.screenshot)
                 .then((res) => res.json())
                 .then((json) => {

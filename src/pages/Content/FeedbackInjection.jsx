@@ -367,9 +367,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
                                 <FiEdit />
                               </IconButton>
                             ) : (
-                              <IconButton
-                                style={{ display: 'hidden' }}
-                              ></IconButton>
+                              <div></div>
                             )}
                             <IconButton
                               size="small"

@@ -19,6 +19,7 @@ function Profile({ showProfileSet, user }) {
     chrome.storage.local.get(['showInjection'], (res) => {
       injectionSet(res.showInjection);
     });
+    console.log(user);
     return () => {};
   }, []);
   const spring = {
@@ -88,7 +89,7 @@ function Profile({ showProfileSet, user }) {
           id="propic"
           alt="propic"
         />
-
+        <div id="username">@{user.username}</div>
         <div id="setting">
           Show Save Item Button
           <Switch
