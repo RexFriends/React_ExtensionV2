@@ -340,7 +340,9 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
     let payload = {
       user_requesting_id: msg.user_requesting_id,
       product_id: msg.product_id,
+      contact_id: msg.contact_id,
     };
+    console.log('send rex payload', payload);
     fetch(APIURL + '/api/send_rex?uid=' + msg.uid, {
       method: 'POST',
       headers: {

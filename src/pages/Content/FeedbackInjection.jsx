@@ -105,11 +105,13 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
 
   const handleSendRequestClick = (friend) => {
     if (friend.is_user === false) {
+      console.log(friend);
       let payload = {
         action: 'send rex',
         user_requesting_id: null,
         uid: uid,
         product_id: currentItem.id,
+        contact_id: friend.id,
       };
       chrome.runtime.sendMessage(payload);
     } else {
@@ -118,6 +120,7 @@ function FeedbackInjeciton({ currentItem, uid, currentCopy }) {
         user_requesting_id: friend.id,
         uid: uid,
         product_id: currentItem.id,
+        contact_id: null,
       };
       chrome.runtime.sendMessage(payload);
     }
