@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener((response) => {
   //* redirect user to website on install
   chrome.tabs.create({
     active: true,
-    url: 'https://app.rexfriends.com',
+    url: 'https://hello.rexfriends.com',
   });
   //* these clears & sets default storage on install
   chrome.storage.sync.clear();
