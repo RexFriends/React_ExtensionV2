@@ -91,7 +91,7 @@ function ClosetInjection({
               id="textfield"
               placeholder="Closet Name"
               autoComplete="off"
-              maxLength="12"
+              maxLength="30"
               value={newClosetText}
               onChange={(e) => newClosetTextSet(e.target.value)}
             />
