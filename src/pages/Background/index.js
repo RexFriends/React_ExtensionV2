@@ -455,13 +455,30 @@ const updateNotifications = () => {
       fetch(APIURL + '/api/get_notif?uid=' + res.uId)
         .then((res) => res.json())
         .then((json) => {
-          // console.log('Update Notifications', json);
+          console.log('Update Notifications', json.notifications.amount);
+          if (json.notifications.amount === 0) {
+            setAllRead();
+          } else {
+            setUnread(json.notifications.amount);
+          }
+
           let notifications = json.notifications;
           chrome.storage.local.set({ notifications });
         })
         .catch(() => console.log('update-notification error'));
     }
   });
+
+  var ba = chrome.browserAction;
+
+  function setAllRead() {
+    ba.setBadgeText({ text: '' });
+  }
+
+  function setUnread(unreadItemCount) {
+    ba.setBadgeBackgroundColor({ color: [255, 0, 0, 128] });
+    ba.setBadgeText({ text: '' + unreadItemCount });
+  }
 };
 
 const updateCloset = () => {

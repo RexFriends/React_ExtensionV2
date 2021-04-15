@@ -14,10 +14,10 @@ async function isInjectionAllowed(url) {
   let server = 'https://server.rexfriends.com';
   const response = await fetch(server + '/api/get-blacklist-sites');
   const json = await response.json();
-
+  // console.log('blacklist', json);
   // url = url.substring(7, 40);
   url = url.replace(/(^\w+:|^)\/\//, '').split('/')[0];
-  console.log('current url', url);
+  // console.log('current url', url);
   for (var i = 0; i <= json.list.length; i++) {
     if (url.includes(json.list[i])) {
       return false;
