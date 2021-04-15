@@ -1,0 +1,664 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+#rex-content-injection {
+  z-index: 99999;
+  position: fixed;
+  top: 100px;
+  right: 0px;
+  user-select: none;
+  overflow-wrap: break-word;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: 'Baloo 2';
+  color: black;
+}
+#rex-content-injection #request-signin {
+  height: 70px;
+  background-color: #24bdaf;
+  width: 120px;
+  font-size: 14px;
+  text-align: center;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-left: auto;
+  font-weight: 600;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+#rex-content-injection #landing-button {
+  height: 70px;
+  display: flex;
+  justify-content: flex-end;
+}
+#rex-content-injection #landing-button #item-not-saved {
+  display: flex;
+  justify-content: flex-end;
+}
+#rex-content-injection #landing-button #item-not-saved #save-button {
+  background-color: #ececec;
+  height: 30px;
+  font-size: 16px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-top: 20px;
+  font-family: 'Baloo 2';
+  font-weight: 600;
+}
+#rex-content-injection #landing-button #item-not-saved #cart-icon {
+  cursor: pointer;
+  margin-top: 15px;
+  background-color: #ececec;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+#rex-content-injection #landing-button #loading {
+  margin-right: -26px;
+  margin-top: 25px;
+}
+#rex-content-injection #landing-button #item-saved {
+  display: flex;
+  justify-content: flex-end;
+}
+#rex-content-injection #landing-button #item-saved #saved-item-options {
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  width: 35px;
+  justify-content: space-between;
+  margin-top: 0px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #saved-item-options
+  #closet-button {
+  color: #000;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  background-color: #ececec;
+  height: 28px;
+  width: 28px;
+}
+#rex-content-injection #landing-button #item-saved #cart-icon {
+  cursor: pointer;
+  margin-top: 15px;
+  background-color: #ececec;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+#rex-content-injection #landing-button #item-saved #itemcloset-list {
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+  margin-right: 7px;
+  height: 450px;
+  width: 300px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closet-top {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 2px;
+  padding: 5px 10px;
+  border-bottom: 2px solid rgba(43, 42, 42, 0.521);
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closet-top
+  #title {
+  font-weight: 600;
+  padding-right: 10px;
+  font-size: 16px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closet-top
+  #closet-button {
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  margin-top: -5px;
+  width: 30px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closet-top
+  #closet-button
+  #svg {
+  font-size: 16px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #new-closet-button {
+  height: 36px;
+  width: 100%;
+  border-radius: 0px;
+  margin-left: 3px;
+  margin-bottom: 2px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #new-closet {
+  margin-top: 0px;
+  height: 24px;
+  padding: 2px 0px;
+  width: 100%;
+  border-radius: 0px;
+  margin-bottom: 2px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #new-closet-field {
+  padding: 5px 0px;
+  margin-top: 0px;
+  height: 35px;
+  width: 100%;
+  display: flex;
+  margin-bottom: 2px;
+  margin-left: 3px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #new-closet-field
+  #textfield {
+  margin-top: -2px;
+  background: transparent;
+  margin-left: 8px;
+  height: 30px;
+  width: 245px;
+  padding-left: 15px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #new-closet-field
+  #icon {
+  margin-top: 2px;
+  margin-right: 0px;
+  margin-left: 8px;
+  height: 23px;
+  width: 23px;
+  box-shadow: 0 0 2px #000;
+}
+#rex-content-injection #landing-button #item-saved #itemcloset-list #closets {
+  height: 350px;
+  margin: 2px 4px 0px 4px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar {
+  width: 14px;
+  height: 18px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar-thumb {
+  height: 6px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets
+  #closet-item {
+  transition: background-color 0.3s;
+  margin: 5px 0px;
+  height: 25px;
+  display: flex;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets
+  #closet-item:hover {
+  background-color: #ececec;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets
+  #closet-item
+  #closet-name {
+  font-size: 18px;
+  margin-left: 0px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  height: 20px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar {
+  width: 14px;
+  height: 18px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar-thumb {
+  height: 6px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #itemcloset-list
+  #closets::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+#rex-content-injection #landing-button #item-saved #sharebox {
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+  margin-right: 7px;
+  max-height: 450px;
+  width: 300px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+#rex-content-injection #landing-button #item-saved #sharebox #rex-top {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 2px;
+  padding: 5px 10px;
+  border-bottom: 2px solid rgba(43, 42, 42, 0.521);
+}
+#rex-content-injection #landing-button #item-saved #sharebox #rex-top #title {
+  font-weight: 600;
+  padding-right: 10px;
+  font-size: 16px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-top
+  #share-button {
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  margin-top: -5px;
+  width: 30px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-top
+  #share-button
+  #svg {
+  font-size: 16px;
+}
+#rex-content-injection #landing-button #item-saved #sharebox #rex-top #popup {
+  position: absolute;
+  margin-top: -45px;
+  font-size: 12px;
+  border-radius: 13px;
+  padding: 3px 5px;
+  background-color: #f8f8f8;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+#rex-content-injection #landing-button #item-saved #sharebox #rex-content {
+  display: flex;
+  flex-direction: column;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #addfriend {
+  display: flex;
+  justify-content: space-around;
+  margin: 0px 5px;
+  height: 35px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #addfriend
+  #svg {
+  font-size: 16px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #searchbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 43px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #searchbar
+  #motion {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #searchbar
+  #motion
+  #input {
+  height: 35px;
+  border-radius: 3px;
+  margin: 0px 5px;
+  width: 180px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #searchbar
+  #motion
+  #searchbutton {
+  width: 30px;
+  height: 30px;
+  margin-left: -2px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #searchbar
+  #motion
+  #searchbutton
+  #svg {
+  font-size: 16px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList {
+  height: 350px;
+  margin: 2px 4px 0px 4px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #fff;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList::-webkit-scrollbar {
+  width: 14px;
+  height: 18px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList::-webkit-scrollbar-thumb {
+  height: 6px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #query {
+  margin: 10px 0px;
+  border-bottom: #504f4f 1px solid;
+  padding-left: 5px;
+  font-weight: 600;
+  padding-right: 5px;
+  justify-content: space-between;
+  display: flex;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #friend {
+  transition: background-color 0.3s;
+  display: flex;
+  margin: 5px 0px;
+  justify-content: space-between;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #friend:hover {
+  background-color: #ececec;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #friend
+  #proimg {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  padding-left: 5px;
+  margin-right: -25px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #friend
+  #name {
+  padding-left: 20px;
+  width: 180px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #friend
+  #name
+  #input {
+  width: 200px;
+  margin-left: -3px;
+}
+#rex-content-injection
+  #landing-button
+  #item-saved
+  #sharebox
+  #rex-content
+  #friendList
+  #no-users {
+  padding: 0px 5px;
+  text-align: center;
+}
+#rex-content-injection #landing-button #item-saved #feedback-notif {
+  position: absolute;
+  z-index: 9999;
+  width: 100px;
+  height: 25px;
+  right: 161px;
+  top: 8px;
+  padding: 0px 4px;
+  text-align: center;
+  border-radius: 5px;
+  overflow: hidden;
+  font-size: 16px;
+}
+#rex-content-injection #landing-button #item-saved #feedback-notif.bad {
+  border: solid red 2px;
+  color: red;
+}
+#rex-content-injection #landing-button #item-saved #feedback-notif.good {
+  border: solid #24bdaf 2px;
+  color: #24bdaf;
+}
+#rex-content-injection #landing-button #item-saved #closet-notif {
+  border: solid red 2px;
+  position: absolute;
+  z-index: 9999;
+  width: 100px;
+  height: 25px;
+  right: 161px;
+  top: 8px;
+  padding: 0px 4px;
+  text-align: center;
+  border-radius: 5px;
+  overflow: hidden;
+  font-size: 16px;
+}
+#rex-content-injection #landing-button #item-saved #closet-notif.bad {
+  border: solid red 2px;
+  color: red;
+}
+#rex-content-injection #landing-button #item-saved #closet-notif.good {
+  border: solid #24bdaf 2px;
+  color: #24bdaf;
+}
+#rex-content-injection #landing-button #error {
+  border: solid red 2px;
+  position: fixed;
+  width: 55px;
+  height: 55px;
+  color: red;
+  font-weight: 700;
+  margin-top: 85px;
+  margin-right: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+#rex-content-injection #hide1 {
+  background-color: rgba(255, 255, 255, 0.493);
+  right: 10px;
+  top: -12px;
+  position: absolute;
+}
+#rex-content-injection #hide2 {
+  background-color: rgba(255, 255, 255, 0.493);
+  right: 12px;
+  top: -10px;
+  position: absolute;
+}
+#rex-screenshot-animation {
+  background-color: rgba(218, 218, 218, 0.377);
+  z-index: 99999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: calc(100vw);
+  height: calc(100vh);
+  animation: flash 1s;
+  animation-iteration-count: 1;
+}
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

@@ -17,6 +17,7 @@ async function isInjectionAllowed(url) {
 
   // url = url.substring(7, 40);
   url = url.replace(/(^\w+:|^)\/\//, '').split('/')[0];
+  console.log('current url', url);
   for (var i = 0; i <= json.list.length; i++) {
     if (url.includes(json.list[i])) {
       return false;

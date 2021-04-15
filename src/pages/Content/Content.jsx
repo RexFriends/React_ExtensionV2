@@ -50,7 +50,6 @@ const Content = () => {
       currentURISet(response.uri.newValue);
     }
     if (response.current_copy) {
-      // console.log('in chrome', response.current_copy.newValue.copy_link);
       let link = response.current_copy.newValue.copy_link;
       currentCopySet(link);
       var inp = document.createElement('input');
@@ -189,7 +188,6 @@ const Content = () => {
                               />
                             )}
                           </AnimatePresence>
-
                           <div id="saved-item-options">
                             <IconButton
                               id="closet-button"
@@ -210,6 +208,7 @@ const Content = () => {
                               )}
                             </IconButton>
                           </div>
+                          O
                           <img
                             onClick={handleOpenRexApp}
                             id="cart-icon"

@@ -56,6 +56,7 @@ function Notification({ showNotificationSet, currentUid }) {
 
   const performUpdateCall = (toUpdate) => {
     const rexUID = localStorage.getItem('rexUID');
+    console.log('content update call to api');
     fetch(`${APIURL}/api/update-notification?uid=${rexUID}`, {
       method: 'POST',
       headers: {
