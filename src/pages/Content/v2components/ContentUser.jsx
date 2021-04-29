@@ -44,6 +44,7 @@ const styles = {
     cursor: 'pointer',
     padding: '16px 0',
     fontSize: 20,
+    color: 'white',
   },
   NotificationBadge: {
     zIndex: 100000,
@@ -67,6 +68,7 @@ const styles = {
 export default function ContentUser() {
   const [initialData, initialDataSet] = useState(undefined);
   const [hovered, setHovered] = useState(false);
+  const [initialScrape, initialScrapeSet] = useState(undefined);
   useEffect(() => {
     chrome.storage.local.get(['uId'], (res) => {
       console.log(
@@ -81,7 +83,7 @@ export default function ContentUser() {
         },
         function (response) {
           if (response != undefined && response != '') {
-            console.log('Response from ContentUser', response);
+            console.log('Response from extension_dashboard', response);
             initialDataSet(response);
             callback(response);
           } else {
@@ -89,8 +91,27 @@ export default function ContentUser() {
           }
         }
       );
-      //   also make another fetch call here to scrape product
     });
+    let currentURL = window.location.toString();
+    console.log(
+      'getting scrape',
+      APIURL + '/api/scrape-product?url=' + currentURL
+    );
+    chrome.runtime.sendMessage(
+      {
+        contentScriptQuery: 'getdata',
+        url: APIURL + '/api/scrape-product?url=' + currentURL,
+      },
+      function (response) {
+        if (response != undefined && response != '') {
+          console.log('Response from scrape-product', response);
+          initialScrapeSet(response);
+          callback(response);
+        } else {
+          callback(null);
+        }
+      }
+    );
 
     return () => {};
   }, []);
@@ -125,7 +146,7 @@ export default function ContentUser() {
         initial={{ x: 0, backgroundColor: primary }}
         animate={{
           x: hovered ? -20 : 0,
-          backgroundColor: hovered ? ['#60F', '#09F', '#FA0'] : primary,
+          backgroundColor: hovered ? ['#60F', primary] : primary,
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
