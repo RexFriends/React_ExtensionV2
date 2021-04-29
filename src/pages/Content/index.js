@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 
 // import Content from './v1components/Content';
 import ContentMain from './v2components/ContentMain';
+import ContentUser from './v2components/ContentUser';
 
 let container = document.body;
 const injectionHost = document.createElement('div');
@@ -40,8 +41,8 @@ chrome.storage.local.get(null, (res) => {
           console.log('no user signed in');
           render(<ContentMain />, content);
         } else {
-          console.log('user signed in');
-          render(<ContentMain />, content);
+          console.log('user signed in UID:', res.uId);
+          render(<ContentUser />, content);
         }
       }
     }

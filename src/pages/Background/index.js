@@ -491,6 +491,30 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
         console.log('facebook error', error.message);
       });
   }
+
+  //! (msg, sender_info, reply)
+  if (msg.contentScriptQuery == 'getdata') {
+    var url = msg.url;
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => reply(json))
+      .catch();
+    return true;
+  }
+  if (msg.contentScriptQuery == 'postData') {
+    fetch(msg.url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, application/xml, text/plain, text/html, *.*',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      },
+      body: 'result=' + msg.data,
+    })
+      .then((response) => response.json())
+      .then((response) => reply(response))
+      .catch((error) => console.log('Error:', error));
+    return true;
+  }
 });
 
 const updateFriends = () => {
