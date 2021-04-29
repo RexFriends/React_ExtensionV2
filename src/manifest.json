@@ -26,6 +26,11 @@
       "css": ["content.styles.css"]
     }
   ],
+  "_execute_browser_action": {
+    "suggested_key": {
+      "default": "Ctrl+Shift+0"
+    }
+  },
   "web_accessible_resources": ["content.styles.css", "128.png"],
   "permissions": [
     "activeTab",

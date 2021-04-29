@@ -1,14 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Content from './Content';
+
+// import Content from './v1components/Content';
+import ContentMain from './v2components/ContentMain';
 
 let container = document.body;
-const element = document.createElement('div');
-const shadownRoot = element.attachShadow({ mode: 'open' });
+const injectionHost = document.createElement('div');
+container.appendChild(injectionHost);
+
+const injection = document.createElement('div');
+injectionHost.appendChild(injection);
 const content = document.createElement('div');
 content.id = 'rex-content-injection';
-shadownRoot.append(content);
-container.append(shadownRoot);
+injection.appendChild(content);
 
 async function isInjectionAllowed(url) {
   let server = 'https://server.rexfriends.com';
@@ -26,16 +30,32 @@ async function isInjectionAllowed(url) {
   return true;
 }
 
-chrome.storage.local.get(['showInjection'], (res) => {
-  if (res.showInjection === true) {
-    isInjectionAllowed(window.location.toString()).then((res) => {
-      console.log('Rex Allowed?', res);
-      if (res === true) {
-        render(
-          <Content />,
-          window.document.querySelector('#rex-content-injection')
-        );
+chrome.storage.local.get(null, (res) => {
+  console.log('content script', res);
+  isInjectionAllowed(window.location.toString()).then((isAllowed) => {
+    console.log('Rex Allowed?', isAllowed);
+    if (isAllowed) {
+      if (res.showInjection === true) {
+        if (res.uId === 'empty') {
+          console.log('no user signed in');
+          render(<ContentMain />, content);
+        } else {
+          console.log('user signed in');
+          render(<ContentMain />, content);
+        }
       }
-    });
-  }
+    }
+  });
+});
+
+// Bellow listener needs to listen for changes made by background/index.js (617-618)
+// specifically to decide whether or not  the user is logged in.
+// If user is logged in, we don't render <ContentMain/>
+// Instead, we create a new component to render for users that already exist, <ContentUser/>
+
+//?BONUS:
+// This is also where we can receive data about whether or not the user is a first time user
+// We can render a Tutorialized component that overlays the main user
+chrome.storage.onChanged.addListener((response) => {
+  console.log('response from chrome listener', response);
 });

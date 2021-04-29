@@ -2,6 +2,33 @@ import '../../assets/img/icon-34.png';
 import '../../assets/img/icon-128.png';
 import '../../assets/img/128.png';
 import APIURL from '../../assets/url';
+import firebase from 'firebase';
+require('firebase/auth');
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyA0C_6O04biBpvVC579SBzGSUQ_IY2bF4I',
+  authDomain: 'rexfriends-dev.firebaseapp.com',
+  projectId: 'rexfriends-dev',
+  storageBucket: 'rexfriends-dev.appspot.com',
+  messagingSenderId: '581619494498',
+  appId: '1:581619494498:web:ec5b8f17fbfe63f1252b3b',
+  measurementId: 'G-MJ0ZRL7M0M',
+};
+
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+if (firebaseApp != null) {
+  console.log('firebase app started successfully');
+} else {
+  console.log('firebase app failed to start');
+}
+
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+const facebookProvider = new firebase.auth.FacebookAuthProvider();
+facebookProvider.setCustomParameters({
+  display: 'popup',
+});
 
 chrome.runtime.onInstalled.addListener((response) => {
   //* redirect user to website on install
@@ -109,6 +136,7 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
 
   //* Creates new account / logs user in if using Google/FB OAuth
   if (msg.action === 'login-signup') {
+    console.log('login-signup');
     let payload = {
       firstname: msg.firstname,
       lastname: msg.lastname,
@@ -123,8 +151,9 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
-    }).then((res) => res.json());
-    // .then((json) => console.log('signupweb fetch result:', json));
+    })
+      .then((res) => res.json())
+      .then((json) => console.log('signupweb fetch result:', json));
     return;
   }
   //* Screenshots & saves product/page
@@ -432,6 +461,36 @@ chrome.runtime.onMessage.addListener((msg, sender_info, reply) => {
       })
       .catch(() => console.log('get-user error'));
   }
+  if (msg.action === 'googleLogin') {
+    firebase
+      .auth()
+      .signInWithPopup(googleProvider)
+      .then((res) => {
+        console.log('success  googleLogin', res);
+        handleSuccessfulLogin(
+          res.user.uid,
+          res.additionalUserInfo.profile.given_name,
+          res.additionalUserInfo.profile.family_name,
+          res.user.email
+        );
+      })
+      .catch((error) => {
+        console.log('google error', error.message);
+      });
+  }
+  if (msg.action === 'facebookLogin') {
+    firebase
+      .auth()
+      .signInWithPopup(facebookProvider)
+      .then((res) => {
+        console.log('success facebookLogin', res);
+        let name = res.user.displayName.split(' ');
+        handleSuccessfulLogin(res.user.uid, name[0], name[1], res.user.email);
+      })
+      .catch((error) => {
+        console.log('facebook error', error.message);
+      });
+  }
 });
 
 const updateFriends = () => {
@@ -534,3 +593,42 @@ const sendRex = (msg) => {
     })
     .catch(() => console.log('send-rex error', payload));
 };
+
+function handleSuccessfulLogin(uid, firstname, lastname, email, phone = null) {
+  console.log('handlesuccesfulLogin');
+  let payload = {
+    uid: uid,
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+    phone: phone,
+  };
+  console.log('fetch signupweb');
+  fetch(APIURL + '/api/signupweb', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      // If user already exist, add their data to chromestorage to trigger change in injection
+      // if not, add their data to chromestorage to trigger change in injection
+      // if wrong info, show error
+      console.log('signupweb fetch result:', json);
+      if (json.success === true) {
+        if (json.error === 'User Already Exists') {
+          console.log('user already exist');
+          chrome.storage.local.set({ uId: payload.uid });
+        } else {
+          console.log('new user', json);
+          chrome.storage.local.set({ uId: payload.uid });
+        }
+      }
+    });
+
+  //?BONUS:
+  // Send data in state about whether or not this is a new user.
+  return;
+}

@@ -32,6 +32,7 @@
     "react-hot-loader": "^4.13.0",
     "react-icons": "^4.1.0",
     "react-moment": "^1.1.1",
+    "react-shadow-root": "^5.0.4",
     "sass": "^1.32.4"
   },
   "devDependencies": {
