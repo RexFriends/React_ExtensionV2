@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { primary } from './colors';
 import { wrap } from 'popmotion';
 import APIURL from '../../../assets/url';
-import uncheckedIcon from './injection-03.png';
-import checkedIcon from './injection-04.png';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { AnimatePresence, motion } from 'framer-motion';
+import InitialScrape from './InitialScrape';
+
 const styles = {
-  Body: {
+  Icon: {
     zIndex: 99999,
     backgroundColor: primary,
     position: 'fixed',
@@ -50,8 +50,8 @@ const styles = {
     zIndex: 100000,
     backgroundColor: primary,
     position: 'fixed',
-    top: 84,
-    right: 40,
+    top: 89,
+    right: 42,
     width: 27,
     height: 27,
     borderRadius: 100,
@@ -69,6 +69,9 @@ export default function ContentUser() {
   const [initialData, initialDataSet] = useState(undefined);
   const [hovered, setHovered] = useState(false);
   const [initialScrape, initialScrapeSet] = useState(undefined);
+  const [showInitialScrape, showInitialScrapeSet] = useState(true);
+  const [showApplicationBody, showApplicationBodySet] = useState(false);
+
   useEffect(() => {
     chrome.storage.local.get(['uId'], (res) => {
       console.log(
@@ -128,7 +131,7 @@ export default function ContentUser() {
   };
   return (
     <>
-      {initialData?.notifications?.amount > 0 ? (
+      {initialData?.notifications?.amount > 0 && (
         <motion.div
           style={styles.NotificationBadge}
           whileHover={{ scale: 1.1 }}
@@ -137,12 +140,10 @@ export default function ContentUser() {
         >
           {initialData.notifications.amount}
         </motion.div>
-      ) : (
-        <div style={styles.NotificationBadge}> 'No Notifications'</div>
       )}
 
       <motion.div
-        style={styles.Body}
+        style={styles.Icon}
         initial={{ x: 0, backgroundColor: primary }}
         animate={{
           x: hovered ? -20 : 0,
@@ -154,7 +155,7 @@ export default function ContentUser() {
       >
         <img
           style={styles.Logo}
-          alt="nocheck"
+          alt=""
           src="https://extension-static-image-hosting-rexfriends.s3.amazonaws.com/injection-04.png"
         ></img>
       </motion.div>
@@ -167,6 +168,11 @@ export default function ContentUser() {
       >
         <AiOutlineMenu styles={{ display: 'block', margin: 'auto' }} />
       </motion.div>
+      <AnimatePresence>
+        {showInitialScrape && (
+          <InitialScrape showInitialScrapeSet={showInitialScrapeSet} />
+        )}
+      </AnimatePresence>
     </>
   );
 }

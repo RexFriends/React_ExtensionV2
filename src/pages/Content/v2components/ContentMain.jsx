@@ -28,7 +28,7 @@ const styles = {
   },
   LoginBody: {
     position: 'fixed',
-    top: 180,
+    bottom: 25,
     right: 0,
     width: 300,
     height: 500,
